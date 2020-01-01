@@ -1,0 +1,213 @@
+\begin{thebibliography}{30}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Abraham et~al.(2017)Abraham, Prabhakar, Hartmann, and
+  Murphey]{abraham2017ergodic}
+Ian Abraham, Ahalya Prabhakar, Mitra~JZ Hartmann, and Todd~D Murphey.
+\newblock Ergodic exploration using binary sensing for nonparametric shape
+  estimation.
+\newblock \emph{IEEE Robotics and Automation Letters}, 2\penalty0 (2):\penalty0
+  827--834, 2017.
+
+\bibitem[Ansari and Murphey(2016)]{ansari2016sequential}
+Alexander~R Ansari and Todd~D Murphey.
+\newblock Sequential action control: closed-form optimal control for nonlinear
+  and nonsmooth systems.
+\newblock \emph{IEEE Transactions on Robotics}, 32\penalty0 (5):\penalty0
+  1196--1214, 2016.
+
+\bibitem[Arablouei et~al.(2014)Arablouei, Werner, Huang, and
+  Do{\u{g}}an{\c{c}}ay]{arablouei2014distributed}
+Reza Arablouei, Stefan Werner, Yih-Fang Huang, and Kutluy{\i}l
+  Do{\u{g}}an{\c{c}}ay.
+\newblock Distributed least mean-square estimation with partial diffusion.
+\newblock \emph{IEEE Transactions on Signal Processing}, 62\penalty0
+  (2):\penalty0 472--484, 2014.
+
+\bibitem[Bailey and Durrant-Whyte(2006)]{bailey2006simultaneous}
+Tim Bailey and Hugh Durrant-Whyte.
+\newblock Simultaneous localization and mapping {SLAM}: {P}art {II}.
+\newblock \emph{IEEE Robotics \& Automation Magazine}, 13\penalty0
+  (3):\penalty0 108--117, 2006.
+
+\bibitem[Bertsekas and Tsitsiklis(1989)]{bertsekas1989parallel}
+Dimitri~P Bertsekas and John~N Tsitsiklis.
+\newblock \emph{Parallel and distributed computation: numerical methods},
+  volume~23.
+\newblock Prentice hall Englewood Cliffs, NJ, 1989.
+
+\bibitem[Carli et~al.(2008)Carli, Chiuso, Schenato, and
+  Zampieri]{carli2008distributed}
+Ruggero Carli, Alessandro Chiuso, Luca Schenato, and Sandro Zampieri.
+\newblock Distributed kalman filtering based on consensus strategies.
+\newblock \emph{IEEE Journal on Selected Areas in Communications}, 26\penalty0
+  (4), 2008.
+
+\bibitem[Carmel and Markovitch(1999)]{carmel1999exploration}
+David Carmel and Shaul Markovitch.
+\newblock Exploration strategies for model-based learning in multi-agent
+  systems: Exploration strategies.
+\newblock \emph{Autonomous Agents and Multi-agent systems}, 2\penalty0
+  (2):\penalty0 141--172, 1999.
+
+\bibitem[Choset and Nagatani(2001)]{choset2001topological}
+Howie Choset and Keiji Nagatani.
+\newblock Topological simultaneous localization and mapping (slam): toward
+  exact localization without explicit localization.
+\newblock \emph{IEEE Transactions on Robotics and Automation}, 17\penalty0
+  (2):\penalty0 125--137, 2001.
+
+\bibitem[Dahiya et~al.(2010)Dahiya, Metta, Valle, and Sandini]{ts_ref_1}
+R.~S. Dahiya, G.~Metta, M.~Valle, and G.~Sandini.
+\newblock Tactile sensing: {F}rom humans to humanoids.
+\newblock \emph{IEEE Transactions on Robotics}, 26\penalty0 (1):\penalty0
+  1--20, Feb 2010.
+\newblock ISSN 1552-3098.
+\newblock \doi{10.1109/TRO.2009.2033627}.
+
+\bibitem[De~La~Torre et~al.(2016)De~La~Torre, Fla{\ss}kamp, Prabhakar, and
+  Murphey]{de2016ergodic}
+Gerardo De~La~Torre, Kathrin Fla{\ss}kamp, Ahalya Prabhakar, and Todd~D
+  Murphey.
+\newblock Ergodic exploration with stochastic sensor dynamics.
+\newblock In \emph{American Control Conference (ACC), 2016}, pages 2971--2976,
+  2016.
+
+\bibitem[Deo(2016)]{deo2016graph}
+Narsingh Deo.
+\newblock \emph{Graph theory with applications to engineering and computer
+  science}.
+\newblock Courier Dover Publications, 2016.
+
+\bibitem[Du and Swamy(2014)]{du2014radial}
+Ke-Lin Du and MNS Swamy.
+\newblock Radial basis function networks.
+\newblock In \emph{Neural Networks and Statistical Learning}, pages 299--335.
+  Springer, 2014.
+
+\bibitem[Dudek et~al.(1996)Dudek, Jenkin, Milios, and
+  Wilkes]{dudek1996taxonomy}
+Gregory Dudek, Michael~RM Jenkin, Evangelos Milios, and David Wilkes.
+\newblock A taxonomy for multi-agent robotics.
+\newblock \emph{Autonomous Robots}, 3\penalty0 (4):\penalty0 375--397, 1996.
+
+\bibitem[Durrant-Whyte and Bailey(2006)]{durrant2006simultaneous}
+Hugh Durrant-Whyte and Tim Bailey.
+\newblock Simultaneous localization and mapping: {Part I}.
+\newblock \emph{IEEE robotics \& automation magazine}, 13\penalty0
+  (2):\penalty0 99--110, 2006.
+
+\bibitem[Iida and Ijspeert(2016)]{iida2016biologically}
+Fumiya Iida and Auke~Jan Ijspeert.
+\newblock Biologically inspired robotics.
+\newblock In \emph{Springer Handbook of Robotics}, pages 2015--2034. Springer,
+  2016.
+
+\bibitem[Julier and Uhlmann(1997)]{julier1997new}
+Simon~J Julier and Jeffrey~K Uhlmann.
+\newblock New extension of the kalman filter to nonlinear systems.
+\newblock In \emph{AeroSense'97}, pages 182--193. International Society for
+  Optics and Photonics, 1997.
+
+\bibitem[Khamis and Gomaa(2014)]{khamis2014adaptive}
+Mohamed~A Khamis and Walid Gomaa.
+\newblock Adaptive multi-objective reinforcement learning with hybrid
+  exploration for traffic signal control based on cooperative multi-agent
+  framework.
+\newblock \emph{Engineering Applications of Artificial Intelligence},
+  29:\penalty0 134--151, 2014.
+
+\bibitem[Liu et~al.(2014)Liu, Liu, and Li]{liu2014distributed}
+Zhaoting Liu, Ying Liu, and Chunguang Li.
+\newblock Distributed sparse recursive least-squares over networks.
+\newblock \emph{IEEE Trans. Signal Processing}, 62\penalty0 (6):\penalty0
+  1386--1395, 2014.
+
+\bibitem[Manss et~al.(2016)Manss, Shutin, Wiedemann, Viseras, and
+  Mueller]{manss2016decentralized}
+Christoph Manss, Dmitriy Shutin, Thomas Wiedemann, Alberto Viseras, and Joachim
+  Mueller.
+\newblock Decentralized multi-agent entropy-driven exploration under sparsity
+  constraints.
+\newblock In \emph{Compressed Sensing Theory and its Applications to Radar,
+  Sonar and Remote Sensing (CoSeRa)}, pages 143--147, 2016.
+
+\bibitem[Marquardt(1963)]{marquardt1963algorithm}
+Donald~W Marquardt.
+\newblock An algorithm for least-squares estimation of nonlinear parameters.
+\newblock \emph{Journal of the society for Industrial and Applied Mathematics},
+  11\penalty0 (2):\penalty0 431--441, 1963.
+
+\bibitem[Mathew and Mezi{\'c}(2011)]{mathew2011metrics}
+George Mathew and Igor Mezi{\'c}.
+\newblock Metrics for ergodicity and design of ergodic dynamics for multi-agent
+  systems.
+\newblock \emph{Physica D: Nonlinear Phenomena}, 240\penalty0 (4):\penalty0
+  432--442, 2011.
+
+\bibitem[Mihaylova et~al.(2002)Mihaylova, Lefebvre, Bruyninckx, Gadeyne, and
+  De~Schutter]{mihaylova2002comparison}
+Lyudmila Mihaylova, Tine Lefebvre, Herman Bruyninckx, Klaas Gadeyne, and Joris
+  De~Schutter.
+\newblock A comparison of decision making criteria and optimization methods for
+  active robotic sensing.
+\newblock In \emph{International Conference on Numerical Methods and
+  Applications}, pages 316--324. Springer, 2002.
+
+\bibitem[Miller et~al.(2016)Miller, Silverman, MacIver, and
+  Murphey]{miller2016ergodic}
+Lauren~M Miller, Yonatan Silverman, Malcolm~A MacIver, and Todd~D Murphey.
+\newblock Ergodic exploration of distributed information.
+\newblock \emph{IEEE Transactions on Robotics}, 32\penalty0 (1):\penalty0
+  36--52, 2016.
+
+\bibitem[Pei et~al.(2014)Pei, Wu, and Zhang]{pei2014distributed}
+Fujun Pei, Mei Wu, and Simin Zhang.
+\newblock Distributed {SLAM} using improved particle filter for mobile robot
+  localization.
+\newblock \emph{The Scientific World Journal}, 2014.
+
+\bibitem[Ryan and Hedrick(2010)]{ryan2010particle}
+Allison Ryan and J~Karl Hedrick.
+\newblock Particle filter based information-theoretic active sensing.
+\newblock \emph{Robotics and Autonomous Systems}, 58\penalty0 (5):\penalty0
+  574--584, 2010.
+
+\bibitem[Shell and Matari{\'c}(2006)]{shell2006ergodic}
+Dylan~A Shell and Maja~J Matari{\'c}.
+\newblock Ergodic dynamics for large-scale distributed robot systems.
+\newblock In \emph{International Conference on Unconventional Computation},
+  pages 254--266. Springer, 2006.
+
+\bibitem[Viseras~Ruiz et~al.(2014)Viseras~Ruiz, Angermann, Wieser, Frassl, and
+  Mueller]{viseras2014efficient}
+Alberto Viseras~Ruiz, Michael Angermann, Iris Wieser, Martin Frassl, and
+  Joachim Mueller.
+\newblock Efficient multi-agent exploration with {G}aussian processes.
+\newblock 2014.
+
+\bibitem[Wan and Van Der~Merwe(2000)]{wan2000unscented}
+Eric~A Wan and Rudolph Van Der~Merwe.
+\newblock The unscented kalman filter for nonlinear estimation.
+\newblock In \emph{Adaptive Systems for Signal Processing, Communications, and
+  Control Symposium 2000/}, pages 153--158, 2000.
+
+\bibitem[Yang et~al.(2013)Yang, Zhang, Lin, Zhou, Jing, Su, Yang, Chen, Hu, and
+  Wang]{yang2013human}
+Ya~Yang, Hulin Zhang, Zong-Hong Lin, Yu~Sheng Zhou, Qingshen Jing, Yuanjie Su,
+  Jin Yang, Jun Chen, Chenguo Hu, and Zhong~Lin Wang.
+\newblock Human skin based triboelectric nanogenerators for harvesting
+  biomechanical energy and as self-powered active tactile sensor system.
+\newblock \emph{ACS nano}, 7\penalty0 (10):\penalty0 9213--9222, 2013.
+
+\bibitem[Zhu et~al.(2015)Zhu, Zeng, Chen, Luo, and Li]{zhu2015bioinspired}
+Lianli Zhu, Lizhan Zeng, Xuedong Chen, Xin Luo, and Xiaoqing Li.
+\newblock A bioinspired touching sensor for amphibious mobile robots.
+\newblock \emph{Advanced Robotics}, 29\penalty0 (22):\penalty0 1437--1452,
+  2015.
+
+\end{thebibliography}

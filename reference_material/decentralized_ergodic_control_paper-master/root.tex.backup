@@ -1,0 +1,636 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%2345678901234567890123456789012345678901234567890123456789012345678901234567890
+%        1         2         3         4         5         6         7         8
+
+\documentclass[letterpaper, 10 pt, conference]{ieeeconf}  % Comment this line out if you need a4paper
+
+%\documentclass[a4paper, 10pt, conference]{ieeeconf}      % Use this line for a4 paper
+
+\IEEEoverridecommandlockouts                              % This command is only needed if 
+                                                          % you want to use the \thanks command
+
+\overrideIEEEmargins                                      % Needed to meet printer requirements.
+
+%In case you encounter the following error:
+%Error 1010 The PDF file may be corrupt (unable to open PDF file) OR
+%Error 1000 An error occurred while parsing a contents stream. Unable to analyze the PDF file.
+%This is a known problem with pdfLaTeX conversion filter. The file cannot be opened with acrobat reader
+%Please use one of the alternatives below to circumvent this error by uncommenting one or the other
+%\pdfobjcompresslevel=0
+%\pdfminorversion=4
+
+% See the \addtolength command later in the file to balance the column lengths
+% on the last page of the document
+
+% The following packages can be found on http:\\www.ctan.org
+\usepackage{graphics} % for pdf, bitmapped graphics files
+\usepackage{epsfig} % for postscript graphics files
+%\usepackage{mathptmx} % assumes new font selection scheme installed
+%\usepackage{times} % assumes new font selection scheme installed
+\usepackage{amsmath} % assumes amsmath package installed
+\usepackage{amssymb}  % assumes amsmath package installed
+%\usepackage[bookmarks=true]{hyperref}
+\usepackage{balance}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+
+\usepackage{changes}
+
+%\usepackage[noadjust]{cite}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{definition}{Definition}
+\newtheorem{proposition}{Proposition}
+\newtheorem{lemma}{Lemma}
+
+\title{\LARGE \bf
+Decentralized Ergodic Control: Distribution-Driven Sensing and Exploration for Multi-Agent Systems
+}
+
+\author{Ian Abraham and Todd D. Murphey
+\thanks{This material is based upon work supported by the National Science Foundation under awards IIS-1426961 and IIS-1717951. Any opinions, findings, and conclusions or recommendations expressed in this material are those of the author(s) and do not necessarily reflect the views of the National Science Foundation.}% <-this % stops a space
+\thanks{Authors are with the Neuroscience and Robotics Laboratory (NxR) at the Department of Mechanical Engineering, Northwestern University, 2145 Sheridan Road Evanston, IL 60208 USA.}
+\thanks{{\tt\small Email: i-abr@u.northwestern.edu, t-murphey@northwestern.edu}}
+}
+
+\begin{document}
+
+
+
+\maketitle
+\thispagestyle{empty}
+\pagestyle{empty}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{abstract}
+We present ergodic control as a method for providing decentralized time-varying coverage using multiple agents with nonlinear dynamics.
+Ergodic control allows us to specify distributions as objectives for area coverage problems for nonlinear robot systems. 
+A variant of an ergodic control policy is derived here to enable full distributivity amongst a set of robotic agents.
+It is then shown that using consensus-based methods, ergodic control can be fully decentralized for a multi-agent system.
+Examples are presented to illustrate the applicability of our method for multi-agent terrain mapping as well as 
+multi-agent target localization.
+An analysis on ergodic policies as a Nash equilibrium is provided for game theoretic applications.
+\end{abstract}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{INTRODUCTION}
+\label{sec:introduction}
+
+Within the field of autonomous mobile robots, active exploration and area coverage has been a fundamental area of research. 
+Specifically, exploration and mapping of unknown environments has led to the development of various SLAM-like algorithms \cite{bailey2006simultaneous, durrant2006simultaneous, choset2001topological}. 
+Recent work in active exploration has utilized optimal sensing based on sensor modalities available to the robot \cite{abraham2017ergodic, de2016ergodic, miller2016ergodic, yang2013human, ts_ref_1}. 
+Encoding exploratory behavior in robotics has largely been inspired by biology \cite{iida2016biologically, zhu2015bioinspired}. In particular, the need for unique exploratory behavior subject to constraints imposed by sensory modalities like visual and tactile has led to advances in the use of information theoretic active exploration \cite{mavrommatiTRO2017realTime, abraham2017ergodic, miller2016ergodic, mihaylova2002comparison, ryan2010particle}. 
+A clear extension to much of the previously mentioned work is application to decentralized multi-agent robotic networks.
+
+Within the field of active exploration and area coverage, distributed robot networks have been shown to improve the efficiency and applicability of exploration of mobile robots \cite{carmel1999exploration, dudek1996taxonomy, manss2016decentralized}. 
+Moreover, the application of distributed robotic networks take into consideration the specifications of the task and effectively use the underlying network connection for improved performance \cite{manss2016decentralized, viseras2014efficient, khamis2014adaptive, pei2014distributed}. 
+
+Existing work in applications of ergodic theory in robotics has been formulated as a centralized multi-agent system for linear dynamical systems \cite{mathew2011metrics}. 
+Later work then used a hybrid systems theory approach for ergodic control for nonlinear systems~\cite{mavrommatiTRO2017realTime} which uses a centralized hub for multi-agent area coverage.
+In addition, work has been done on synthesizing controllers for multi-robot systems using ergodic processes \cite{shell2006ergodic}. 
+However, it has yet to be shown how such a network would benefit from a fully decentralized network or whether it can be extended to nonlinear dynamical systems.
+
+In this work, we contribute a formulation of an ergodic control policy for active exploration and area coverage for multi-agent systems. 
+Specifically, we formulate a control policy for nonlinear dynamical systems which uses hybrid systems theory as in~\cite{mavrommatiTRO2017realTime, ansari2016sequential}. 
+This formulation is shown to be distributable amongst a multi-agent system.
+It is then shown that under network consensus in a decentralized multi-agent system, the proposed controller has comparable performance with that of a centralized ergodic control policy.
+As examples, we apply our algorithm to simulated multi-agent mapping of terrain and target localization problems.
+Last, using game theory, we analyze ergodic control as a Nash equilibrium control policy for multi-agent games.
+
+The paper is outlined as follows: Section \ref{sec:decentralized-ergodic-control} introduces ergodicity and the ergodic metric as well as formulates the ergodic control problem for decentralized multi-agent systems. 
+Section \ref{sec:terrain-mapping-using-ergodic-area-coverage} demonstrates the algorithm on an area-coverage problem for multi-agents. 
+We then present the problem for multi-agent target localization in Section~\ref{sec:ergodic-control-for-multi-agent-pursuit-evasion-games}.
+A game theoretic analysis on ergodic control policies is provided in Section~\ref{sec:ergodic-control-policies-as-nash-equilibrium-strategies} and the conclusion is in Section~\ref{sec:conclusions}.
+
+
+\section{Decentralized Ergodic Control}
+\label{sec:decentralized-ergodic-control}
+
+In this section, ergodicity and the ergodic metric are introduced.
+The ergodic metric is then applied in robotics for area coverage with respect to a defined spatial statistic.
+A variant of an ergodic controller is then derived and shown to be distributable.
+A consensus-based version of the ergodic metric is then presented to fully decentralize the controller for multi-agent systems.
+
+\added{
+In this paper we make use of the terminology {\it distributed} and {\it decentralized} distinctively. We make the distinctions as follows: 
+}
+\begin{definition}
+ \added{A {\it distributed} optimization algorithm is one where the initialization of the optimization occurs in a centralized computer hub and then the calculation for the optimization can be offloaded onto a set of individual computation units.}
+\end{definition}
+\begin{definition}
+ \added{A {\it decentralized} optimization algorithm is one where each individual computational unit solves their own optimization problem and through a network of communication (often through consensus), solves a larger centralized problem without the need for a centralized hub.}
+\end{definition}
+
+\subsection{Ergodicity and the Ergodic Metric}
+\label{subsec:ergodicity-and-the-ergodic-metric}
+Let us define a robot whose state at time $t$ is given as $x(t) : \mathbb{R}^+ \to \mathbb{R}^n$.
+Controls to the robot at time $t$ are $u(t) : \mathbb{R}^+ \to \mathbb{R}^m$.
+The dynamics of the robot are assumed to be governed by a control-affine dynamical system of the form
+\begin{equation} \label{eq:robot_dynamics}
+\dot{x}(t) = f(x(t),u(t)) = g(x(t)) + h(x(t)) u(t)
+\end{equation}
+where $g(x) : \mathbb{R}^n \to \mathbb{R}^n$ is the free, unactuated dynamics of the robot, and $h(x): \mathbb{R}^n \to \mathbb{R}^{n \times m}$ is the dynamic control response subject to input $u(t)$.
+Next, define a bounded domain $\mathcal{X}_v \subset \mathbb{R}^v$  whose limits are $\left[0,L_1 \right] \times \left[ 0,L_2 \right] \times \ldots \left[ 0, L_v\right]$ with $v\le n$. 
+A robot's time-averaged statistics $c(s, x(t))$ for a trajectory $x(t)$ (i.e., the statistics describing where the robot spends most of its time) for some time interval $t \in \left[ t_i, t_i + T\right]$ is given by
+\begin{equation}\label{eq:time_avg_stats}
+c(s, x(t)) = \frac{1}{T}\int_{t_i}^{t_i+T} \delta (s - x(t)) dt
+\end{equation}
+where $\delta$ is a Dirac delta function, $T \in \mathbb{R}^+$ is the time horizon, $t_i \in \mathbb{R}^+$ is the $i^\text{th}$ sampling time, and $s \in \mathbb{R}^v$ is the search domain.
+Define a target distribution $\phi(s) : \mathcal{X}_v \to \mathbb{R}^+$ with respect to which the robot is to be ergodic (i.e., time spent during a trajectory $x(t)$ is proportional to the spatial statistics of that region).
+An ergodic metric~\cite{mathew2011metrics} which relates the two distributions $c(s,x(t))$ and $\phi(s)$ is:
+\begin{align} \label{eq:ergodic_metric}
+\mathcal{E}(x(t)) & = q \,\sum_{k \in \mathbb{N}^v} \Lambda_k \left(c_k -\phi_k \right)^2   \\
+& = q \, \sum_{k \in \mathbb{N}^v} \left( \frac{1}{T} \int_{t_i}^{t_i + T} F_k(x(t)) dt - \phi_k \right)^2 \nonumber
+\end{align}
+where
+\begin{equation*}
+\phi_k =  \int_{\mathcal{X}_v} \phi(s) F_k(s) ds, 
+\end{equation*} 
+\added{$q \in \mathbb{R}^+$ is a scalar weight on the metric,} and $c_k$ are the Fourier decompositions\footnote{The cosine basis function is used, however, any choice of basis function $F_k$ can be used.} of $c(s,x(t))$ and $\phi(s)$ with
+\begin{equation*}
+F_k(x) = \frac{1}{h_k}\prod_{i=1}^v \cos \left( \frac{k_i \pi x_i}{L_i} \right)
+\end{equation*}
+being the cosine basis function for a given coefficient $k \in \mathbb{N}^v$,  $h_k$ is a normalization factor defined in~\cite{mathew2011metrics}, and $\Lambda_k = (1 + \Vert k \Vert^2)^{-\frac{v+1}{2}}$ are weights on the frequency coefficients.
+A robot whose control inputs result in a trajectory $x(t)$ that minimizes (\ref{eq:ergodic_metric}) as $t\to \infty$ is then said to be optimally ergodic with respect to the target distribution.
+
+Because we are computing the ergodic control in receding horizon, and the target distribution $\phi(s)$ can be time-varying, a history of where a robot has been is maintained in memory in order to compute the ergodic metric.
+The ergodic metric is then computed by adding a time parameter $\Delta t_\mathcal{E}$ which governs how far into the past the robot must remember where it has been. 
+Equation (\ref{eq:ergodic_metric}) then becomes
+\begin{equation}\label{eq:aug_ergodic_metric}
+\mathcal{E}(x(t)) = q \, \sum_{k \in \mathbb{N}^v} \left( \frac{1}{\added{T_\mathcal{E}}} \int_{t_i-\Delta t_\mathcal{E} }^{t_i + T} F_k(x(t)) dt - \phi_k\right) ^2.
+\end{equation}	
+\added{where $T_\mathcal{E} = T + \Delta t_\mathcal{E}$.}
+\footnote{\added{The choice of $\Delta t_\mathcal{E}$ is arbitrary to a user-specified desired behavior i.e., small $\Delta t_\mathcal{E}$ results in myopic behavior and vice-versa.}}
+
+
+\subsection{Ergodic Control}
+\label{subsec:ergodic-control}
+In~\cite{miller2013trajectory} the ergodic controller is formulated using a trajectory optimizations scheme.
+While this approach does give optimal solutions, it is difficult for the controller to run in real time. 
+As a result,~\cite{mavrommatiTRO2017realTime} developed a hybrid systems approach using~\cite{ansari2016sequential} to obtain control policies that sufficiently reduce the ergodic metric.
+We formulate our controller using a similar approach, but provide a variation to the controller that allows the policy to be fully distributable. 
+	
+Rather than directly minimizing (\ref{eq:ergodic_metric}) with respect to $x(t)$ and $u(t)$, we consider the sensitivity of (\ref{eq:ergodic_metric}) with respect to an infinitesimal time of application \replaced{$\lambda \in \mathbb{R^+} \to 0$}{$\lambda \to 0$} of the best possible control $u_\star(t) : \mathbb{R}^+ \to \mathbb{R}^m$ that sufficiently reduces (\ref{eq:ergodic_metric}) at time \replaced{$\tau \in \mathbb{R}^+$}{$\tau$} from some default control $u_\text{def}(t) : \mathbb{R}^+  \to \mathbb{R}^m$.
+Following~\cite{mavrommatiTRO2017realTime}, we take the derivative of (\ref{eq:ergodic_metric}) with respect to the duration \added{time} $\lambda$ \added{of control $u_\star(t)$} which gives the sensitivity (known as the mode insertion gradient~\cite{vasudevan2013consistent, axelsson2008gradient, egerstedt2006transition,caldwell2016projection}).
+\begin{proposition} \label{prop:mode_insert}
+The first order sensitivity of (\ref{eq:ergodic_metric} with respect to the control duration $\lambda$ of the applied control $u_\star(\tau)$ is
+\begin{equation}\label{eq:mode_insertion}
+\frac{\partial \mathcal{E}}{\partial \lambda} \Big \vert_\tau = \rho(\tau)^T (f_2(\tau, \tau) - f_1(\tau))
+\end{equation}
+where $f_2(t, \tau) = f(x(t), u_\star(\tau))$, $f_1(t) = f(x(t), u_\text{def}(t))$, and $\rho(t) : \mathbb{R}^+ \to \mathbb{R}^n$ is given by the differential equation
+\begin{equation*}
+\dot{\rho} = - 2 \frac{q}{T} \sum_{k \in \mathbb{N}^v} \Lambda_k (c_k - \phi_k) \frac{\partial F_k}{\partial x} - \frac{\partial f}{\partial x}^T \rho(t)
+\end{equation*}
+with $\rho(t_i + T) = \bold{0} \in \mathbb{R}^n$.
+\end{proposition}
+\begin{proof}
+See Appendix or~\cite{mavrommatiTRO2017realTime}.
+\end{proof}
+The mode insertion gradient now represents the sensitivity of the ergodic metric with respect to an application of a control $u_\star (t)$. 
+
+Given the mode insertion gradient, we seek to find the control $u_\star(t)$ that \deleted{provides the} most \replaced{significantly decreases}{significant decrease} in the objective (\ref{eq:ergodic_metric}).
+\replaced{We encode this objective through a}{To do so, we define a} secondary objective function 
+\begin{equation}\label{eq:secondary_objective}
+J_2 = \int_{t_i}^{t_i + T} \frac{\partial \mathcal{E}}{\partial \lambda}\Big \vert_t + \frac{1}{2}\Vert u_\star(t) - u_\text{def}(t) \Vert_R^2
+\end{equation}
+where $R \in \mathbb{R}^{m \times m}$ is a positive definite matrix that weighs $u_\star(t)$.
+\added{Since $\frac{\partial \mathcal{E}}{\partial \lambda} < 0$ and~(\ref{eq:secondary_objective}) is quadratic in $u_\star(t)$, the minimizer of~(\ref{eq:secondary_objective}) with respect to $u_\star(t)$ is the control that provides the most negative mode insertion gradient and reduces the objective.}
+\begin{proposition}
+The solution to $u_\star(t)$ that minimizes (\ref{eq:secondary_objective}) is
+\begin{equation} \label{eq:ustar}
+u_\star(t) = -R^{-1} h(x)^T \rho(t) + u_\text{def}(t).
+\end{equation}
+\end{proposition}
+\begin{proof}
+Taking the derivative of (\ref{eq:secondary_objective}) with respect to control $u_\star(t)$ and setting the solution to zero gives
+\begin{align}\label{eq:secondary_objective2}
+\frac{\partial J_2}{\partial u_\star} & = \int_{t_i}^{t_i + T} \frac{\partial }{\partial u_\star} \left( \frac{\partial \mathcal{E}}{\partial \lambda}\right) + R(u_\star - u_\text{def}) dt \nonumber \\
+& = \int_{t_i}^{t_i + T}  h(x)^T\rho + R(u_\star - u_\text{def}) dt = 0
+\end{align}
+where the dependency on time is dropped for simplicity.
+Solving for $u_\star$ in (\ref{eq:secondary_objective2}) gives
+\begin{equation*}
+u_\star(t) = -R^{-1}h(x(t))^T\rho(t) + u_\text{def}(t).
+\end{equation*}
+\end{proof}
+\begin{lemma}\label{lemma:mode_insert}
+Assuming that $h(x)^T \rho \neq 0$, the mode insertion gradient in (\ref{eq:mode_insertion}) is always negative for $u_\star(t)$ defined in (\ref{eq:ustar}), that is $\frac{\partial \mathcal{E}}{\partial \lambda} < 0 \,  \forall u_\star \in \mathcal{U}$ where $\mathcal{U}$ is the control space.
+\end{lemma}
+\begin{proof}
+Inserting (\ref{eq:ustar}) into (\ref{eq:mode_insertion}) gives
+\begin{align}\label{eq:mode_insertion_neg}
+\frac{\partial \mathcal{E}}{\partial \lambda} &= h(x)^T\rho \left(-R^{-1} h(x)^T\rho \right) \nonumber \\
+& = -\rho^Th(x)R^{-1}h^T\rho = - \Vert h(x)^T\rho \Vert_{R^{-1}}^2 < 0.
+\end{align}
+Thus (\ref{eq:mode_insertion_neg}) shows us that $\forall u_\star \in \mathcal{U}$ defined in (\ref{eq:ustar}), $\frac{\partial \mathcal{E}}{\partial \lambda}<0$.
+\end{proof}
+Because (\ref{eq:ustar}) always provides a negative $\frac{\partial \mathcal{E}}{\partial \lambda}$, this implies that each control that is chosen will result in a decrease in (\ref{eq:ergodic_metric}); thus eventually minimizing the ergodic metric.
+Additionally, as in~\cite{mavrommatiTRO2017realTime}, a contractive constraint on the reduction of the ergodic metric is enforced that further provides a reduction in the ergodic metric from the previous control calculation time.
+
+In many robotics applications, it is required that the control is saturated due to actuation limits in the robot while maintaining some form of sufficient decrease in the objective cost. 
+In this work, we select a time of application $\tau$ that results in the most negative mode insertion gradient, or more formally written by
+\begin{equation*}
+\tau_\star= \underset{\tau}{\text{argmin }} \frac{\partial \mathcal{E}}{\partial \lambda}
+\end{equation*}
+\added{where the subscript $\star$ indicates the time of application that results in the most negative mode insertion gradient.}
+A line search~\cite{armijo1966minimization} is then used to find the duration $\lambda$ that significantly reduces (\ref{eq:ergodic_metric}) subject to the saturated control $u_\star(\tau)$.
+The resulting control is then added to the default control $u_\text{def}(t) = u_\star(\tau) \forall t \in \left[ \tau, \tau+\lambda \right] \cap \left[ t_i, t_i+t_s\right]$ where $t_s$ is the sampling time and $u_\star(\tau)$ is saturated.
+
+The following subsection derives the ergodic control policy for decentralized multi-agent systems.
+
+\subsection{Decentralized Ergodic Control using Consensus}
+\label{subsec:decentralized-ergodic-control-using-consensus}
+
+Consider a set of $N$ connected agents with state $x(t) = \left[ x_1(t)^\top, x_2(t)^\top, \ldots, x_N(t)^\top\right]^\top : \mathbb{R}^+ \to \mathbb{R}^{n N}$.
+\begin{proposition}
+Given the default trajectory of each agent $x(t) \forall t \in \left[ t_i - \Delta t_\mathcal{E}, t_i + T\right]$ subject to $u_\text{def}(t)$, the control policy (\ref{eq:ustar}) is \replaced{{\it distributable}}{distributable} amongst each individual agent and independent of the other agent's control policy.
+\end{proposition}
+\begin{proof}
+Let us first define the dynamics of the collective multi-agent system as
+\begin{align} \label{eq:collective_dynamics}
+\dot{x} & = f(x,u) = g(x) + h(x) u \nonumber\\
+& = \begin{bmatrix}
+g_1(x_1) \\
+g_2(x_2) \\
+\vdots \\
+g_N(x_N)
+\end{bmatrix} + 
+ \begin{bmatrix}
+h_1(x_1) & \ldots & 0\\
+\vdots& \ddots & \\
+0 & & h_N(x_N)
+\end{bmatrix} u
+\end{align}
+where $h(x)$ is block diagonal.
+The multi-agent system's contribution to the time-averaged statistics $c_k$ can be rewritten as
+\begin{align}\label{eq:centralized_ck}
+c_k & = \frac{1}{N} \sum_{j=1}^N \frac{1}{\added{T_\mathcal{E}}} \int_{t_i - \added{\Delta t_\mathcal{E}}}^{t_i + T} F_k(x_j(t)) dt \nonumber \\
+& = \frac{1}{\added{T_\mathcal{E}}} \int_{t_i - \added{\Delta t_\mathcal{E}}}^{t_i+T} \tilde{F}_k(x(t)) dt
+\end{align}
+where $\tilde{F}_k(x(t)) = \frac{1}{N}\sum_j F_k(x_j(t))$.
+The mode insertion gradient (\ref{eq:mode_intersion2}) under a multi-agent dynamical system now has $f_1(t)$ and $f_2(t, \tau)$ defined by (\ref{eq:collective_dynamics}) and the convolution equation for the adjoint variable $\rho(t)$ becomes
+\begin{equation}\label{eq:decentralized_adjoint}
+\dot{\rho} = -2 \frac{q}{T}\sum_{k \in \mathbb{N}^v} \Lambda \left( c_k - \phi_k \right) \frac{\partial \tilde{F}_k}{\partial x} - \frac{\partial f}{\partial x}^\top \rho
+\end{equation}
+where 
+\begin{equation*}
+\frac{\partial \tilde{F}_k}{\partial x} = \frac{1}{N} \begin{bmatrix}
+\frac{\partial F_k (x_1)}{\partial x_1} \\
+\vdots \\
+\frac{\partial F_k(x_N)}{\partial x_N}
+\end{bmatrix}
+\end{equation*}
+and 
+\begin{equation*}
+\frac{\partial f}{\partial x} =
+\begin{bmatrix}
+\frac{\partial f_1}{\partial x_1} & 0 & \ldots & 0 \\
+0 & \frac{\partial f_{2}}{\partial x_{2}} \\
+\vdots & & \ddots  & \\
+0 &  & & \frac{\partial f_N}{\partial x_N}
+\end{bmatrix}
+\end{equation*}
+is block diagonal.
+Because each agent's dynamics are independent of each other, (\ref{eq:decentralized_adjoint}) can be written independently for each agent as
+\begin{equation*}
+\dot{\rho}_j = -2\frac{q}{\added{T_\mathcal{E}} N} \sum_{k \in \mathbb{N}^v} \Lambda_k (c_k - \phi_k) \frac{\partial F_k(x_j)}{\partial x_j} - \frac{\partial f_j}{\partial x_j}^\top \rho_j.
+\end{equation*}
+Similarly, the ergodic control policy derived from (\ref{eq:secondary_objective2}) becomes
+\begin{multline} \label{eq:expanded_control}
+\begin{bmatrix}
+u_{\star,1} (t) \\
+\vdots \\
+u_{\star,_N}(t) \\
+\end{bmatrix}
+=
+-R^{-1}  \begin{bmatrix}
+h_1(x_1) & \\
+& \ddots & \\
+& & h_N(x_N)
+\end{bmatrix}^T
+\begin{bmatrix}
+\rho_1 (t) \\
+\vdots \\
+\rho_N(t)
+\end{bmatrix}
+ \\+
+ \begin{bmatrix}
+ u_{\text{def},1} (t) \\
+ \vdots \\
+ u_{\text{def},N}(t)
+ \end{bmatrix}
+\end{multline}
+where $R\in\mathbb{R}^{mN \times mN}$ and $mN$ is the size of the collective multi-agent system control input.
+Since $h(x)$ is block diagonal,  (\ref{eq:expanded_control}) becomes
+\begin{equation}\label{eq:policy_independence}
+u_{\star,j} (t) = -R_j^{-1} h_j(x_j)^T \rho_j(t) + u_{\text{def},j}(t) 
+\end{equation}
+for each agent $j \in \left[ 1, \ldots, N \right]$ and $R_j \in \mathbb{R}^{m \times m}$.
+The control policy in (\ref{eq:policy_independence}) for the $j^\text{th}$ agent does not depend on the $i^\text{th}$ agent and therefore is distributable.
+\end{proof}
+
+While the $j^\text{th}$ control policy is independent of the $i^\text{th}$ control policy, it is assumed starting from (\ref{eq:aug_ergodic_metric}) that each agent's past and anticipated trajectory is known to all agents before calculating the control policy.
+We can consider this a distributed ergodic control policy where the control computation is still done on individual CPUs on-board the agents, but the initial conditions are required to be sent from a central communication hub. 
+Instead of a distributed controller, we seek to completely remove the need for a centralized communication hub and have fully independent agents. 
+We \replaced{address}{solve} this problem using consensus-based methods where a network of agents communicates with one another. 
+
+Rather than communicating the past and anticipated trajectories of each agent (which may have large dimensionality) in the network, we communicate the $c_k$ values instead. \footnote{It is assumed that each agent \replaced{has}{as} the same $\phi_k$ target, however, the same analysis can be done to form a consensus on the target $\phi_k$ values.}
+\begin{proposition}
+A connected multi-agent network under consensus over the $c_k$ coefficients approximates the time-average statistics $c_k$ of the centralized ergodic metric (\ref{eq:centralized_ck}), that is $\tilde{c}_k \to c_k$ as $t \to \infty$ where $\tilde{c}_k$ is the consensus-based time-average statistics.
+\end{proposition}
+\begin{proof}
+Consider the collective time-averaged statistics $c_k$ for the system in (\ref{eq:centralized_ck}):
+\begin{equation*}
+c_k = \frac{1}{N} \sum_{j=1}^N \frac{1}{T} \int_{t_i}^{t_i + T} F_k(x_j(t))dt.
+\end{equation*}
+Note that equation (\ref{eq:centralized_ck}) is simply an averaging of the individual agent's spatial statistics. 
+Let us then define a row and column stochastic consensus matrix $P$ (e.g., $\sum_j P_{ij} = \bold{1}$) that defines the network connectivity amongst the agents \cite{deo2016graph, bertsekas1989parallel}.
+The operation $\sum_j P_{ij} c_{k,j}$ is equivalent to taking an average of the local $c_{k,j}$ values for each neighboring agent. \footnote{For simplicity in notation, we assume that $P_{ij}$ refers to a block matrix such that $P \in \mathbb{R}^{\vert k \vert N \times \vert k \vert N}$ and $P_{ij} \in \mathbb{R}^{\vert k \vert \times \vert k \vert}$ where $\vert k \vert$ is the total number of $c_k$ coefficients.} 
+Therefore, we can write a consensus on the collective $c_k$ (\ref{eq:centralized_ck}) using $P$ as \cite{deo2016graph, bertsekas1989parallel}
+\begin{equation*}
+\lim_{t_k \to \infty}\sum_j P_{ij}^{t_k} c_{k,j} = \frac{1}{N}\sum_j \frac{1}{T} \int_{t_0}^{t_0 +T} F_k(x_j(t)) dt
+\end{equation*}
+where $N$ is the number of agents, $t_k$ is the number of times that $P_{ij}c_{k,j}$ values have been communicated through the network and averaged.
+Thus consensus amongst all the agents approximates the collective multi-agent system time-averaged statistics $c_k$ in (\ref{eq:centralized_ck}).
+\end{proof}
+Choosing the time of application and duration remains the same where each agent decides their own actions according to the decentralized mode-insertion gradient.
+Algorithm~\ref{alg:decentralized-ergodic-control} is provided to illustrate the decentralized ergodic control for multi-agent systems.
+
+
+\begin{algorithm}
+\caption{Decentralized Ergodic Control} \label{alg:decentralized-ergodic-control}
+\centering
+\begin{algorithmic}[1]
+% \Procedure{eSAC}{}
+\State \textbf{initialize:} agents $N$ with initial condition $x_j(0)$, initial target distribution $\phi_{k,0}$, $t_0, t_f, t_s$, time horizon $T$, ergodic memory $\Delta t_\mathcal{E}$ and network $P$.
+\While{$t_i < t_f$}
+\For{agent in agents}
+\Comment Control step
+\State simulate $x(t), \rho(t)$ for $t \in \left[ t_i, t_i +T \right] $ from $x(t_i)$
+\State compute $u_\star(\tau)$ from (\ref{eq:ustar})
+\State calculate $\tau$ and $\lambda$ from \cite{ansari2016sequential, mavrommatiTRO2017realTime}
+\State $u_\text{def}(t) = u_\star(\tau) \forall t \in \left[ \tau, \tau+\lambda \right] \cap \left[ t_i, t_i+t_s\right]$
+\EndFor
+\For{agent in agents}
+\Comment Communication Loop
+\State Send $c_{k,j}$ to $i^\text{th}$ neighbors in the network $P$
+\State Receive $c_{k,i}$ from neighbors and average amongst $i^\text{th}$ neighbors
+\EndFor
+\State apply control $u_\text{def}(t_i)$
+\State $i \gets i +1$
+\EndWhile
+% \EndProcedure
+\end{algorithmic}
+\end{algorithm}
+
+\subsection{Scalability}
+\added{
+In this section, centralized, distributed, and decentralized ergodic controllers were derived and discussed.
+Specifically, by augmenting the formulation of the centralized controller relative to~\cite{mavrommatiTRO2017realTime} it was possible to show that the controller is now distributable. 
+By invoking a consensus-based approach, we were then able to show how the algorithm is fully decentralizable. 
+In this subsection, we analyze the scalability of each of these algorithms. 
+}
+
+\added{
+In~\cite{mavrommatiTRO2017realTime}, the original formulation of the ergodic controller was developed for a centralized multi-agent system where controls are broadcasted to each agent from a central computer. 
+As an extension, our approach solves the constraint of a central computer by formulated the controller in a way that allows each agent to individually compute the controller as we have shown that the overall central controller is agent independent. 
+An analysis on the centralized complexity of the algorithm with respect to the size of the search space as well as the dimensionality of the multi-agent system is provided in~\cite{mavrommatiTRO2017realTime}.
+In the fully decentralized framework, the goal is to have as many agents of arbitrary state-space and arbitrary search space dimensions such that computation is limited only to the individual agents rather than the collective.
+This, in part, enables the multi-agent system to solve a larger centralized task without having to consider the scaling issues of each agent. 
+As a result, the only limiting factor is the communication of the time-averaged statistics of each agent to their neighboring agents. 
+Because each agent only needs to store their own trajectory history, more-so this is communicated to each agent not as a list of where the robot has been, but a set of Fourier coefficients that remains fixed regardless of the length of trajectory memory that is needed. 
+Therefore, the complexity analysis remains in with the individual agent and the search space. 
+Furthermore, 
+}
+
+
+\section{Ergodic Area Coverage for Multi-Agent Elevation Mapping}
+\label{sec:terrain-mapping-using-ergodic-area-coverage}
+In this section we illustrate the capabilities of a decentralized ergodic controller for multi-agent area coverage for elevation mapping.
+We use this example to show improved area coverage of a decentralized ergodic controller while comparing with a centralized controller for the same task.
+
+\begin{figure*}[thpb]
+\centering
+\framebox{\parbox{6.8in}{
+\includegraphics[scale=1.0]{figures/area_coverage1.png}}}
+\caption{
+(a) Three quadcopter agents are depicted in the map with the terrain. The red dashed line indicates the location.
+(b) Trajectories of a single agent (blue) and a multi-agent system (blue, red, green) are shown estimating terrain. The terrain map is obtained from height measurements (dark regions represent high elevation).
+(c) Top-down orthographic view of the terrain map for comparison with the results in (b). 
+Error of the estimate is shown at $10$ second intervals of collected data. The more area coverage, the more collected data and a resulting better terrain map.}
+\label{fig:mapping_results}
+\end{figure*}
+
+\begin{figure}[thpb]
+\centering
+\framebox{\parbox{3.25in}{
+\includegraphics[scale=1.0]{figures/consensus_effect.pdf}}}
+\caption{Comparison of ergodic metric for a decentralized ergodic scheme versus a centralized ergodic scheme. 
+Due to communication and consensus amongst the agent in a decentralized scheme, the ergodic metric does not reduce as quickly as a centralized scheme would.
+However, the decentralized scheme is quick to reach consensus and performs comparably to the centralized scheme.}
+\label{fig:coverage_comparison}
+\end{figure}
+
+\subsection{Problem Setup}
+% Note to self: Find another reference
+A $12$ dimensional quadrotor~\cite{martin2010true} is used for the robotic agent dynamics with $4$ inputs directly controlling thrust, yaw, pitch, and roll angular accelerations.
+Each agent measures ground elevation relative to the agent's altitude which it uses to construct a model of the terrain.
+Three agents are used that are fully connected to one another.
+The agents are randomly initialized and a Gaussian Process~\cite{vasudevan2009gaussian, plagemann2008learning} is used to construct the terrain elevation from data collected after $10$ second intervals.
+
+\begin{figure*}[thpb]
+\centering
+\framebox{\parbox{6.8in}{
+\includegraphics[scale=1]{figures/target_local2.pdf}}}
+\caption{
+Target localization is illustrated using $3$ agents with quadcopter dynamics and $4$ unknown stationary targets depicted as the red crosses.
+(a) Area coverage of the quadcopter is shown as the lines associated with each quadcopter  at distinct times.
+The density function underneath shows the likely locations of the targets with darker regions indicating higher likelihood values.
+Obstacles are shown as black squares with red outlines. A 3D rendering of the environment is shown in (b). 
+Each agent only has a field of range of $0.36$ meters as shown as the transparent blue circles.
+Within $10$ seconds the agents under decentralized ergodic policies are able to provide a consensus on the location of the targets. 
+(c) Extended Kalman filter values on the location of the target is shown. The black dashed line is the target location ground truth. 
+We refer the reader to the attached multimedia of the target localization example.
+}
+\label{fig:target_local}
+\end{figure*}
+
+\subsection{Results}
+Figure~\ref{fig:mapping_results} illustrates the algorithm for area coverage of three decentralized robotic agents,
+For comparison purposes, the area coverage of a single agent under the ergodic control policy is shown.
+Due to the sharing of where each agent intends to go and where they have been which results in a much more efficient search as each agent chooses the best possible action that helps reduce the ergodic metric. 
+Compared to a single agent, the terrain estimate metric for multi-agent area coverage is significantly less.
+The ergodic control automatically takes into account dynamic constraints and the histories of the other agents in order to allocate where each agent should go in a decentralized fashion.
+We see this in Fig.~\ref{fig:mapping_results}(c) where the multi-agent system immediately acquires a sufficient terrain model within the first ten seconds according the error norm on the estimate.
+
+A comparison is in Fig.~\ref{fig:coverage_comparison} with respect to a centralized hub multi-agent ergodic system.
+Not much performance is lost lost within the first $5$ seconds of the algorithm when the robotic agents are still trying to achieve a consensus.
+After consensus is close to convergence, the decentralized ergodic policy functions just as well as the centralized ergodic policy.
+  
+\section{Decentralized Ergodic Control for Multi-Agent Target Localization}
+\label{sec:ergodic-control-for-multi-agent-pursuit-evasion-games}
+In this section, decentralized ergodic control is used for multi-agent target localization.
+We use the example of multi-agent target localization because this platform provides us with novel demonstration of the decentralized ergodic control algorithm through a well known robotics problem.
+Moreover, we use this application to demonstrate the generalizability of the algorithm.
+
+\subsection{Problem Setup}
+The goal of target localization is to have the agents locate the target (or targets) in the environment. 
+Bearing only sensors~\cite{mavrommatiTRO2017realTime, deans2001experimental} are used for sensing the target with the same three agents as mentioned in Section~\ref{sec:terrain-mapping-using-ergodic-area-coverage} with quadcopter dynamics.
+The obstacles are incorporated into the objective with an obstacle avoidance cost which we define by the function $\Theta(x) : \mathbb{R}^n \to \mathbb{R}^+$ which is a direct penalty if the agent goes near an obstacle (see Appendix for more detail on augmenting the controller with the obstacle cost).
+In addition, we constrain the radius of the target sensor to $0.38$ meter diameter, thus limiting the total area coverage from the sensor.
+The targets are uniformly dispersed throughout the terrain of size $[0,1] \times[0,1]$ \footnote{This is can be easily adjusted in experimentation if the terrain is much larger.} such that they do not intersect with the obstacles.
+Targets are localized using an extended Kalman filter (EKF)~\cite{kalman1960new, julier1997new}. 
+The ergodic controller is initialized with a uniform target distribution. 
+The prior on the targets is initialized as uniform over the search terrain and a distributed EKF updates the prior for the network system~\cite{carli2008distributed}.
+The target distribution is given by the expected information density~\cite{miller2016ergodic, mavrommatiTRO2017realTime} 
+\begin{equation} \label{eq:eid}
+\phi(s) = \eta \det \left[ \int_\theta  \frac{\partial \left( \Upsilon(\theta, s) \right) }{\partial \theta}^T \Sigma^{-1} \frac{\partial \left( \Upsilon(\theta, s) \right)}{\partial \theta} p(\theta) d\theta \right]
+\end{equation}
+where $\eta$ is a normalization factor, $\Upsilon(\theta, s)$ is the bearing only measurement model parametrized by the position of the targets $\theta$.
+
+\subsection{Results}
+Figure~\ref{fig:target_local} shows the trajectories of the 3 agents localizing 4 targets in the environment. 
+Each each agent chooses a different path that reduces the ergodic measure as well as increases the area coverage.
+The agents each localize the targets while successfully avoiding obstacles (illustrated as the black colored squares).
+In Fig.~\ref{fig:target_local}(c), the agents collectively localize each target within the first 10 seconds in a fully decentralized manner.
+While the outcome of the results are unsurprising, it is interesting to see the automatic collaborative nature of a decentralized ergodic controller in the presence of constraints (i.e., dynamics, obstacles, and sensors).
+Simple augmentations to the algorithm can include multiple objectives~\cite{cho2017survey,moritz2017heterogeneous} and consensus on the target distribution $\phi_k$ values.
+Moreover, improving network quality is also possible for noisy multi-agent networks with connectivity drop-out~\cite{satici2016global}.
+
+In the following subsection we take a second glance at the ergodic policy from a game theoretic perspective.
+
+\section{Ergodic Control Policies as Nash Equilibrium Strategies}
+\label{sec:ergodic-control-policies-as-nash-equilibrium-strategies}
+In this section, we analyze the ergodic control policy from a game theoretic point of view in adversarial multi-agent games.
+\begin{definition}
+A game is defined by a tuple $(\mathcal{P}, \mathcal{A}, \mathcal{O}, \mu, \mathcal{U})$ where $\mathcal{P}$ is the set of players in a game, $\mathcal{A}$ is the set of control actions $u(t)$ where $u_i(t) \forall t \in \left[ t_i, t_i + T \right], \forall i \in \mathcal{P}$ is considered an action or strategy profile, $\mathcal{O}$ is the set of outcomes (or state trajectories in our case), $\mu : \mathcal{A} \to \mathcal{O}$ is the function that maps actions to outcomes (in our case this is the robot dynamics), and last $\mathcal{U} : \mathcal{O} \to \mathbb{R}$ is a utility function for each player.
+\end{definition}
+
+Each agent defined by $\mathcal{P}$.
+The action profile or strategy $\mathcal{A}$ is defined by the ergodic control policy subject to a target distribution.
+The resultant trajectory $x(t)$ for each agent is the outcome $\mathcal{O}$ subject to the actions passing through the dynamics $f(x,u)$ of the system ($\mu$).
+Here, we treat the utility function $\mathcal{U}$ as the ergodic metric.
+In game theory the notion of Nash equilibrium~\cite{bhattacharya2009existence, myerson1978refinements} is often used to describe a strategy in a game.
+\begin{definition}
+A strategy is a Nash equilibrium if for each agent $i$, $\mathcal{U}_i(u) \le \mathcal{U}_i( u_{-i})$ where $u_{ -i}$ is the updated strategy profile for all agents not including agent $i$'s strategy.
+\end{definition}
+
+Nash equilibrium tells us whether a strategy results in the best possible expected utility of each agent subject to the other agents' actions.
+We consider Nash equilibrium in the problem of target localization and evasion.
+Specifically, we look at what strategy an evader can use to acquire a Nash equilibrium with the pursuer (localizer) (i.e., a game between the pursuer and evader while the pursuer expends energy not localizing the evader).
+\begin{theorem}
+A Nash equilibrium strategy against a pursuer with an ergodic policy is for the evader to adopt an ergodic policy.
+\end{theorem}
+\begin{proof}
+Consider two agents, $a$ and $b$ on opposing sides of a game.
+Agent $a$ is ergodic with respect to a target distribution $\phi_a(s)$. 
+Agent $b$ is ergodic with respect to $\phi_b(s)$.
+We assume that the target distribution of agent $a$ and $b$ is a function of the state of the agents, that is, $\phi_a(s) = \phi_a(s, x_a(t), x_b(t))$ and  $\phi_b(s) = \phi(s, x_a(t), x_b(t))$.
+From Lemma~\ref{lemma:mode_insert}, we have shown that $\frac{\partial \mathcal{E}}{\partial \lambda} < 0 ,\ \forall u(t)$ defined by an ergodic policy.
+As a result, we can assume that as $t \to \infty$, both agents are asymptotically optimally ergodic with respect to their own target distributions so long as each action reduces the ergodic objective.
+Therefore, we can write the change in the utility function\textemdash which we define as the ergodic metric\textemdash as
+\begin{align*}
+\mathcal{U}_i(x(t) \mid u) - \mathcal{U}_i(x(t) \mid u_{-i} ) & = \Delta U_i  \approx \frac{\partial \mathcal{E}_i}{\partial \lambda} \lambda < 0 \\
+\mathcal{U}_i(x(t) \mid u) - \mathcal{U}_i(x(t) \mid u_{-i} )  & < 0 \\
+\mathcal{U}_i(x(t) \mid u) &< \mathcal{U}_i(x(t) \mid u_{-i} )
+\end{align*}
+
+Thus, an ergodic control strategy is a Nash equilibrium strategy.
+\end{proof}
+
+This kind of analysis lends some insight towards formally viewing ergodic policies with respect to game theory and with application in general multi-agent games.
+
+
+\section{Conclusions}
+\label{sec:conclusions}
+We present a fully decentralized formulation of ergodic control for multi-agent systems.
+It is shown that this formulation is distributable and under consensus, decentralized. 
+Examples of area coverage and target localization and evasion illustrate the application of the algorithm for multi-agent systems.
+In these examples, the algorithm is shown to synthesize control actions that simultaneously consider the multi-agent network as well as the individual agent dynamic constraints.
+Last, we provide a game theoretic analysis of the algorithm such that we prove it is the best possible control policy that an agent can adopt in a multi-agent game.
+This opens up the possibilities of adapting other multi-agent objectives\textemdash such as target localization\textemdash into a decentralized network.
+
+
+In future work will examine the effects of the consensus matrix on the decentralized ergodic policy and augmentations to the target distribution to maintain network connectivity for time-varying network topologies.
+
+%\addtolength{\textheight}{-12cm}   % This command serves to balance the column lengths
+                                  % on the last page of the document manually. It shortens
+                                  % the textheight of the last page by a suitable amount.
+                                  % This command does not take effect until the next page
+                                  % so it should come on the page before the last. Make
+                                  % sure that you do not shorten the textheight too much.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section*{APPENDIX}
+
+\subsection{Proof}
+\label{sec:proof}
+Here, the proof of Proposition~\ref{prop:mode_insert} is as follows.
+
+\begin{proof}
+Taking the derivative of (\ref{eq:ergodic_metric}) with respect to $\lambda$ gives us
+\begin{align}\label{eq:mode_insertion1}
+\frac{\partial \mathcal{E}}{\partial \lambda} & = 2 \frac{q}{T}\sum_{k \in \mathbb{N}^v} \Lambda_k(c_k - \phi_k)\frac{\partial}{\partial \lambda} \int_{\tau}^{t_0+T} F_k(x(t))dt \\
+& =2 \frac{q}{T}\sum_{k \in \mathbb{N}^v} \Lambda_k(c_k - \phi_k) \int_{\tau}^{t_0+T} \frac{ \partial F_k(x(t))}{\partial x} \frac{\partial x(t)}{\partial \lambda}dt. \nonumber
+\end{align}
+From~\cite{egerstedt2006transition,caldwell2016projection} and that
+\begin{equation}
+\frac{\partial x(t)}{\partial \lambda} = \Phi(t,\tau) \left( f_2(\tau, \tau) - f_1(\tau) \right),
+\end{equation}
+where $\Phi(t, \tau)$ is the state transition matrix, (\ref{eq:mode_insertion1}) is written as
+\begin{equation} \label{eq:mode_intersion2}
+\frac{\partial \mathcal{E}}{\partial \lambda}\Big | _\tau = \rho(\tau)^T \left( f_2(\tau, \tau) - f_1(\tau) \right),
+\end{equation}
+where  
+\begin{equation} \label{eq:adjoint1}
+\rho(\tau) = 2 \frac{q}{T}\sum_{k \in \mathbb{N}^v} \Lambda_k(c_k - \phi_k) \int_{\tau}^{t_0+T} \frac{ \partial F_k(x(t))}{\partial x} \Phi(t,\tau)dt.
+\end{equation} 
+We can see that (\ref{eq:adjoint1}) is a convolution equation for
+\begin{equation}
+\dot{\bold{\rho}} = - 2\frac{q}{T}\sum_{k \in \mathbb{N}^v}\Lambda_k(c_k - \phi_k) \frac{\partial F_k(x)}{\partial x} - \frac{\partial f}{\partial x }^T \rho
+\end{equation}
+where $\rho \in \mathbb{R}^n$, $\rho(t_0+T) = \bold{0} \in \mathbb{R}^n$.
+Thus, the mode insertion gradient is given as
+\begin{equation}
+ \frac{\partial \mathcal{E}}{\partial \lambda}\Big | _\tau = \rho(\tau) ^T (f_2(\tau,\tau) - f_1(\tau))
+\end{equation}
+subject to
+\begin{equation}
+\dot{\bold{\rho}} = - 2\frac{q}{T}\sum_{k \in \mathbb{N}^v}\Lambda_k(c_k - \phi_k) \frac{\partial F_k(x)}{\partial x} - \frac{\partial f}{\partial x }^T \rho.
+\end{equation}
+\end{proof}
+
+\subsection{Augmented Objective for Obstacle Avoidance}
+\label{sec:obstacle_cost}
+Here we present an augmented objective function for ergodic exploration and obstacle avoidance.
+Assuming we know that a penalty function $\Theta(x) : \mathbb{R}^n \to \mathbb{R}^+$ we can define an objective cost
+\begin{equation}
+J(x(t) = q_1\mathcal{E}(x(t)) + q_2\int_{t_i}^{t_i+T} \Theta(x(t)) dt
+\end{equation}
+where $q_1,q_2$ are weights on the ergodic cost and the obstacle avoidance cost.
+Following the formulation of the ergodic control policy, the adjoint variable $\rho(t)$ differential equation for the mode insertion gradient (\ref{eq:mode_insertion}) becomes
+\begin{equation}
+\dot{\rho} = -2\frac{q_1}{T} \sum_{k \in \mathbb{N}^v} \Lambda_k (c_k - \phi_k) \frac{ \partial F_k}{\partial x} - q_2\frac{\partial \Theta}{\partial x} - \frac{ \partial f}{\partial x}^\top \rho. 
+\end{equation}
+The control formulation remains the same as done in Section~\ref{sec:decentralized-ergodic-control}.
+
+
+
+%\clearpage
+\balance
+
+\bibliographystyle{IEEEtran}
+\bibliography{references}
+
+
+\end{document}

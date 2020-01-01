@@ -1,0 +1,27 @@
+\contentsline {subsection}{Added: \truncate {.3\textwidth }{ In this paper we make use of the terminology {\it distributed} and {\it decentralized} distinctively. We make the distinctions as follows: }}{1}
+\contentsline {subsection}{Added: \truncate {.3\textwidth }{A {\it distributed} optimization algorithm is one where the initialization of the optimization occurs in a centralized computer hub and then the calculation for the optimization can be offloaded onto a set of individual computation units.}}{1}
+\contentsline {subsection}{Added: \truncate {.3\textwidth }{A {\it decentralized} optimization algorithm is one where each individual computational unit solves their own optimization problem and through a network of communication (often through consensus), solves a larger centralized problem without the need for a centralized hub.}}{1}
+\contentsline {subsection}{Added: \truncate {.3\textwidth }{$q \in \mathbb {R}^+$ is a scalar weight on the metric,}}{2}
+\contentsline {subsection}{Added: \truncate {.3\textwidth }{T_\mathcal {E}}}{2}
+\contentsline {subsection}{Added: \truncate {.3\textwidth }{where $T_\mathcal {E} = T + \Delta t_\mathcal {E}$.}}{2}
+\contentsline {subsection}{Replaced: \truncate {.3\textwidth }{$\lambda \in \mathbb {R^+} \to 0$}}{2}
+\contentsline {subsection}{Replaced: \truncate {.3\textwidth }{$\tau \in \mathbb {R}^+$}}{2}
+\contentsline {subsection}{Added: \truncate {.3\textwidth }{time}}{2}
+\contentsline {subsection}{Added: \truncate {.3\textwidth }{of control $u_\star (t)$}}{2}
+\contentsline {subsection}{Deleted: \truncate {.3\textwidth }{provides the}}{2}
+\contentsline {subsection}{Replaced: \truncate {.3\textwidth }{significantly decreases}}{2}
+\contentsline {subsection}{Replaced: \truncate {.3\textwidth }{We encode this objective through a}}{2}
+\contentsline {subsection}{Added: \truncate {.3\textwidth }{Since $\frac {\partial \mathcal {E}}{\partial \lambda } < 0$ and\nobreakspace {}(6\hbox {}) is quadratic in $u_\star (t)$, the minimizer of\nobreakspace {}(6\hbox {}) with respect to $u_\star (t)$ is the control that provides the most negative mode insertion gradient and reduces the objective (3\hbox {}).}}{2}
+\contentsline {subsection}{Added: \truncate {.3\textwidth }{The choice of $\Delta t_\mathcal {E}$ is arbitrary to a user-specified desired behavior i.e., small $\Delta t_\mathcal {E}$ results in myopic behavior and vice-versa.}}{2}
+\contentsline {subsection}{Added: \truncate {.3\textwidth }{where the subscript $\star $ indicates the time of application that results in the most negative mode insertion gradient.}}{3}
+\contentsline {subsection}{Replaced: \truncate {.3\textwidth }{{\it distributable}}}{3}
+\contentsline {subsection}{Added: \truncate {.3\textwidth }{T_\mathcal {E}}}{3}
+\contentsline {subsection}{Added: \truncate {.3\textwidth }{\Delta t_\mathcal {E}}}{3}
+\contentsline {subsection}{Added: \truncate {.3\textwidth }{T_\mathcal {E}}}{3}
+\contentsline {subsection}{Added: \truncate {.3\textwidth }{\Delta t_\mathcal {E}}}{3}
+\contentsline {subsection}{Added: \truncate {.3\textwidth }{T_\mathcal {E}}}{3}
+\contentsline {subsection}{Replaced: \truncate {.3\textwidth }{address}}{4}
+\contentsline {subsection}{Replaced: \truncate {.3\textwidth }{has}}{4}
+\contentsline {subsection}{Added: \truncate {.3\textwidth }{ In this section, centralized, distributed, and decentralized ergodic controllers were derived and discussed. Specifically, by augmenting the formulation of the centralized controller relative to\nobreakspace {}\cite {mavrommatiTRO2017realTime} it was possible to show that the controller is now distributable. By invoking a consensus-based approach, we were then able to show how the algorithm is fully decentralizable. In this subsection, we analyze the scalability of each of these algorithms. }}{4}
+\contentsline {subsection}{Added: \truncate {.3\textwidth }{ In\nobreakspace {}\cite {mavrommatiTRO2017realTime}, the original formulation of the ergodic controller was developed for a centralized multi-agent system where controls are broadcasted to each agent from a central computer. As an extension, our approach solves the constraint of a central computer by formulated the controller in a way that allows each agent to individually compute the controller as we have shown that the overall central controller is agent independent. An analysis on the centralized complexity of the algorithm with respect to the size of the search space as well as the dimensionality of the multi-agent system is provided in\nobreakspace {}\cite {mavrommatiTRO2017realTime}. In the fully decentralized framework, the goal is to have as many agents of arbitrary state-space and arbitrary search space dimensions such that computation is limited only to the individual agents rather than the collective. This, in part, enables the multi-agent system to solve a larger centralized task without having to consider the scaling issues of each agent. As a result, the only limiting factor is the communication of the time-averaged statistics of each agent to their neighboring agents. Because each agent only needs to store their own trajectory history, more-so this is communicated to each agent not as a list of where the robot has been, but a set of Fourier coefficients that remains fixed regardless of the length of trajectory memory that is needed. Therefore, the complexity analysis remains in with the individual agent and the search space. Furthermore, }}{4}
+\contentsline {subsection}{Deleted: \truncate {.3\textwidth }{lost}}{5}

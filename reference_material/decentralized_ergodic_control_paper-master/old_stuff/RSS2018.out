@@ -1,0 +1,16 @@
+\BOOKMARK [1][-]{section.1}{Introduction}{}% 1
+\BOOKMARK [1][-]{section.2}{Ergodic Control as a Solution to Pursuit-Evasion}{}% 2
+\BOOKMARK [2][-]{subsection.2.1}{Pursuit-Evasion Problem Statement}{section.2}% 3
+\BOOKMARK [2][-]{subsection.2.2}{Ergodic Metric}{section.2}% 4
+\BOOKMARK [2][-]{subsection.2.3}{Ergodic Control}{section.2}% 5
+\BOOKMARK [2][-]{subsection.2.4}{Target Distribution}{section.2}% 6
+\BOOKMARK [2][-]{subsection.2.5}{Decentralized Ergodic Control}{section.2}% 7
+\BOOKMARK [1][-]{section.3}{Network and Consensus}{}% 8
+\BOOKMARK [1][-]{section.4}{Estimation and Localization}{}% 9
+\BOOKMARK [2][-]{subsection.4.1}{Estimation}{section.4}% 10
+\BOOKMARK [2][-]{subsection.4.2}{Target Localization}{section.4}% 11
+\BOOKMARK [1][-]{section.5}{Results}{}% 12
+\BOOKMARK [2][-]{subsection.5.1}{Information-Based Coverage}{section.5}% 13
+\BOOKMARK [2][-]{subsection.5.2}{Localization}{section.5}% 14
+\BOOKMARK [2][-]{subsection.5.3}{Estimation}{section.5}% 15
+\BOOKMARK [1][-]{section.6}{Conclusion}{}% 16

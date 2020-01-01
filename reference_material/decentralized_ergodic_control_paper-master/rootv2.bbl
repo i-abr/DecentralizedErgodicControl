@@ -1,0 +1,212 @@
+\begin{thebibliography}{10}
+\providecommand{\url}[1]{#1}
+\csname url@rmstyle\endcsname
+\providecommand{\newblock}{\relax}
+\providecommand{\bibinfo}[2]{#2}
+\providecommand\BIBentrySTDinterwordspacing{\spaceskip=0pt\relax}
+\providecommand\BIBentryALTinterwordstretchfactor{4}
+\providecommand\BIBentryALTinterwordspacing{\spaceskip=\fontdimen2\font plus
+\BIBentryALTinterwordstretchfactor\fontdimen3\font minus
+  \fontdimen4\font\relax}
+\providecommand\BIBforeignlanguage[2]{{%
+\expandafter\ifx\csname l@#1\endcsname\relax
+\typeout{** WARNING: IEEEtran.bst: No hyphenation pattern has been}%
+\typeout{** loaded for the language `#1'. Using the pattern for}%
+\typeout{** the default language instead.}%
+\else
+\language=\csname l@#1\endcsname
+\fi
+#2}}
+
+\bibitem{carmel1999exploration}
+D.~Carmel and S.~Markovitch, ``Exploration strategies for model-based learning
+  in multi-agent systems: Exploration strategies,'' \emph{Autonomous Agents and
+  Multi-agent systems}, vol.~2, no.~2, pp. 141--172, 1999.
+
+\bibitem{dudek1996taxonomy}
+G.~Dudek, M.~R. Jenkin, E.~Milios, and D.~Wilkes, ``A taxonomy for multi-agent
+  robotics,'' \emph{Autonomous Robots}, vol.~3, no.~4, pp. 375--397, 1996.
+
+\bibitem{manss2016decentralized}
+C.~Manss, D.~Shutin, T.~Wiedemann, A.~Viseras, and J.~Mueller, ``Decentralized
+  multi-agent entropy-driven exploration under sparsity constraints,'' in
+  \emph{Compressed Sensing Theory and its Applications to Radar, Sonar and
+  Remote Sensing (CoSeRa)}, 2016, pp. 143--147.
+
+\bibitem{viseras2014efficient}
+A.~Viseras~Ruiz, M.~Angermann, I.~Wieser, M.~Frassl, and J.~Mueller,
+  ``Efficient multi-agent exploration with {G}aussian processes,'' 2014.
+
+\bibitem{khamis2014adaptive}
+M.~A. Khamis and W.~Gomaa, ``Adaptive multi-objective reinforcement learning
+  with hybrid exploration for traffic signal control based on cooperative
+  multi-agent framework,'' \emph{Engineering Applications of Artificial
+  Intelligence}, vol.~29, pp. 134--151, 2014.
+
+\bibitem{pei2014distributed}
+F.~Pei, M.~Wu, and S.~Zhang, ``Distributed {SLAM} using improved particle
+  filter for mobile robot localization,'' \emph{The Scientific World Journal},
+  2014.
+
+\bibitem{mavrommatiTRO2017realTime}
+A.~Mavrommati, E.~Tzorakoleftherakis, I.~Abraham, and T.~D. Murphey,
+  ``Real-time area coverage and target localization using receding-horizon
+  ergodic exploration,'' \emph{IEEE Transactions on Robotics}, vol.~34, no.~1,
+  pp. 62--80, 2018.
+
+\bibitem{miller2013trajectory}
+L.~M. Miller and T.~D. Murphey, ``Trajectory optimization for continuous
+  ergodic exploration,'' in \emph{American Control Conference}, 2013, pp.
+  4196--4201.
+
+\bibitem{miller2016ergodic}
+L.~M. Miller, Y.~Silverman, M.~A. MacIver, and T.~D. Murphey, ``Ergodic
+  exploration of distributed information,'' \emph{IEEE Transactions on
+  Robotics}, vol.~32, no.~1, pp. 36--52, 2016.
+
+\bibitem{mathew2011metrics}
+G.~Mathew and I.~Mezi{\'c}, ``Metrics for ergodicity and design of ergodic
+  dynamics for multi-agent systems,'' \emph{Physica D: Nonlinear Phenomena},
+  vol. 240, no.~4, pp. 432--442, 2011.
+
+\bibitem{shell2006ergodic}
+D.~A. Shell and M.~J. Matari{\'c}, ``Ergodic dynamics for large-scale
+  distributed robot systems,'' in \emph{International Conference on
+  Unconventional Computation}.\hskip 1em plus 0.5em minus 0.4em\relax Springer,
+  2006, pp. 254--266.
+
+\bibitem{abraham2017ergodic}
+I.~Abraham, A.~Prabhakar, M.~J. Hartmann, and T.~D. Murphey, ``Ergodic
+  exploration using binary sensing for nonparametric shape estimation,''
+  \emph{IEEE Robotics and Automation Letters}, vol.~2, no.~2, pp. 827--834,
+  2017.
+
+\bibitem{miller2015optimalrange}
+L.~M. Miller and T.~D. Murphey, ``Optimal planning for target localization and
+  coverage using range sensing,'' in \emph{IEEE International Conference on
+  Automation Science and Engineering)}, 2015, pp. 501--508.
+
+\bibitem{cortes2004coverage}
+J.~Cortes, S.~Martinez, T.~Karatas, and F.~Bullo, ``Coverage control for mobile
+  sensing networks,'' \emph{IEEE Transactions on robotics and Automation},
+  vol.~20, no.~2, pp. 243--255, 2004.
+
+\bibitem{lee2015multirobot}
+S.~G. Lee, Y.~Diaz-Mercado, and M.~Egerstedt, ``Multirobot control using
+  time-varying density functions,'' \emph{IEEE Transactions on Robotics},
+  vol.~31, no.~2, pp. 489--493, 2015.
+
+\bibitem{miah2017generalized}
+S.~Miah, A.~Y. Panah, M.~M.~H. Fallah, and D.~Spinello, ``Generalized
+  non-autonomous metric optimization for area coverage problems with mobile
+  autonomous agents,'' \emph{Automatica}, vol.~80, pp. 295--299, 2017.
+
+\bibitem{kantaros2015distributed}
+Y.~Kantaros, M.~Thanou, and A.~Tzes, ``Distributed coverage control for concave
+  areas by a heterogeneous robot--swarm with visibility sensing constraints,''
+  \emph{Automatica}, vol.~53, pp. 195--207, 2015.
+
+\bibitem{vander2015algorithms}
+J.~Vander~Hook, P.~Tokekar, and V.~Isler, ``Algorithms for cooperative active
+  localization of static targets with mobile bearing sensors under
+  communication constraints,'' \emph{IEEE Transactions on Robotics}, vol.~31,
+  no.~4, pp. 864--876, 2015.
+
+\bibitem{freundlich2018distributed}
+C.~Freundlich, S.~Lee, and M.~M. Zavlanos, ``Distributed active state
+  estimation with user-specified accuracy,'' \emph{IEEE Transactions on
+  Automatic Control}, vol.~63, no.~2, pp. 418--433, 2018.
+
+\bibitem{alireza2011decentralized}
+A.~Dirafzoon, M.~Bagher~Menhaj, and A.~Afshar, ``Decentralized coverage control
+  for multi-agent systems with nonlinear dynamics,'' vol. 94-D, pp. 3--10, 01
+  2011.
+
+\bibitem{deo2016graph}
+N.~Deo, \emph{Graph theory with applications to engineering and computer
+  science}.\hskip 1em plus 0.5em minus 0.4em\relax Courier Dover Publications,
+  2016.
+
+\bibitem{bertsekas1989parallel}
+D.~P. Bertsekas and J.~N. Tsitsiklis, \emph{Parallel and distributed
+  computation: numerical methods}.\hskip 1em plus 0.5em minus 0.4em\relax
+  Prentice hall Englewood Cliffs, NJ, 1989, vol.~23.
+
+\bibitem{ansari2016sequential}
+A.~R. Ansari and T.~D. Murphey, ``Sequential action control: Closed-form
+  optimal control for nonlinear and nonsmooth systems,'' \emph{IEEE
+  Transactions on Robotics}, vol.~32, no.~5, pp. 1196--1214, 2016.
+
+\bibitem{vasudevan2013consistent}
+R.~Vasudevan, H.~Gonzalez, R.~Bajcsy, and S.~S. Sastry, ``Consistent
+  approximations for the optimal control of constrained switched systems---part
+  1: A conceptual algorithm,'' \emph{SIAM Journal on Control and Optimization},
+  vol.~51, no.~6, pp. 4463--4483, 2013.
+
+\bibitem{axelsson2008gradient}
+H.~Axelsson, Y.~Wardi, M.~Egerstedt, and E.~Verriest, ``Gradient descent
+  approach to optimal mode scheduling in hybrid dynamical systems,''
+  \emph{Journal of Optimization Theory and Applications}, vol. 136, no.~2, pp.
+  167--186, 2008.
+
+\bibitem{egerstedt2006transition}
+M.~Egerstedt, Y.~Wardi, and H.~Axelsson, ``Transition-time optimization for
+  switched-mode dynamical systems,'' \emph{IEEE Transactions on Automatic
+  Control}, vol.~51, no.~1, pp. 110--115, 2006.
+
+\bibitem{caldwell2016projection}
+T.~Caldwell and T.~Murphey, ``Projection-based iterative mode scheduling for
+  switched systems,'' \emph{Nonlinear Analysis: Hybrid Systems}, vol.~21, pp.
+  59--83, 2016.
+
+\bibitem{armijo1966minimization}
+L.~Armijo, ``Minimization of functions having lipschitz continuous first
+  partial derivatives,'' \emph{Pacific Journal of mathematics}, vol.~16, no.~1,
+  pp. 1--3, 1966.
+
+\bibitem{bhattacharya2009existence}
+S.~Bhattacharya and S.~Hutchinson, ``On the existence of {N}ash equilibrium for
+  a two player pursuit-evasion game with visibility constraints,'' in
+  \emph{Algorithmic Foundation of Robotics VIII}, 2009, pp. 251--265.
+
+\bibitem{myerson1978refinements}
+R.~B. Myerson, ``Refinements of the {N}ash equilibrium concept,''
+  \emph{International Journal of Game Theory}, vol.~7, no.~2, pp. 73--80, 1978.
+
+\bibitem{martin2010true}
+P.~Martin and E.~Sala{\"u}n, ``The true role of accelerometer feedback in
+  quadrotor control,'' in \emph{IEEE International Conference on Robotics and
+  Automation (ICRA)}, 2010, pp. 1623--1629.
+
+\bibitem{vasudevan2009gaussian}
+S.~Vasudevan, F.~Ramos, E.~Nettleton, and H.~Durrant-Whyte, ``Gaussian process
+  modeling of large-scale terrain,'' \emph{Journal of Field Robotics}, vol.~26,
+  no.~10, pp. 812--840, 2009.
+
+\bibitem{plagemann2008learning}
+C.~Plagemann, S.~Mischke, S.~Prentice, K.~Kersting, N.~Roy, and W.~Burgard,
+  ``Learning predictive terrain models for legged robot locomotion,'' in
+  \emph{IEEE/RSJ International Conference on Intelligent Robots and Systems
+  (IROS)}, 2008, pp. 3545--3552.
+
+\bibitem{deans2001experimental}
+M.~Deans and M.~Hebert, ``Experimental comparison of techniques for
+  localization and mapping using a bearing-only sensor,'' in \emph{Experimental
+  Robotics VII}, 2001, pp. 395--404.
+
+\bibitem{kalman1960new}
+R.~E. Kalman, ``A new approach to linear filtering and prediction problems,''
+  \emph{Journal of Basic Engineering}, vol.~82, no.~1, pp. 35--45, 1960.
+
+\bibitem{julier1997new}
+S.~J. Julier and J.~K. Uhlmann, ``New extension of the kalman filter to
+  nonlinear systems,'' in \emph{AeroSense'97}.\hskip 1em plus 0.5em minus
+  0.4em\relax International Society for Optics and Photonics, 1997, pp.
+  182--193.
+
+\bibitem{carli2008distributed}
+R.~Carli, A.~Chiuso, L.~Schenato, and S.~Zampieri, ``Distributed kalman
+  filtering based on consensus strategies,'' \emph{IEEE Journal on Selected
+  Areas in Communications}, vol.~26, no.~4, 2008.
+
+\end{thebibliography}

@@ -1,0 +1,165 @@
+% 62 lines (53 sloc)  1.76 KB
+% Title:    A LaTeX Template For Responses To a Referees' Reports
+% Author:   Petr Zemek <s3rvac@gmail.com>
+% Homepage: https://blog.petrzemek.net/2016/07/17/latex-template-for-responses-to-referees-reports/
+% License:  CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/)
+\documentclass[10pt]{article}
+
+% Allow Unicode input (alternatively, you can use XeLaTeX or LuaLaTeX)
+\usepackage[utf8]{inputenc}
+\usepackage{color}
+
+\usepackage{microtype,xparse,tcolorbox}
+\newenvironment{reviewer-comment }{}{}
+\tcbuselibrary{skins}
+\tcolorboxenvironment{reviewer-comment }{empty,
+  left = 1em, top = 1ex, bottom = 1ex,
+  borderline west = {2pt} {0pt} {black!20},
+}
+\ExplSyntaxOn
+\NewDocumentEnvironment {response} { +m O{black!20} } {
+  \IfValueT {#1} {
+    \begin{reviewer-comment~}
+      \setlength\parindent{1em}
+      \noindent
+      \ttfamily #1
+    \end{reviewer-comment~}
+  }
+  \par\noindent\ignorespaces
+} { \bigskip\par }
+
+\NewDocumentCommand \Editor { m } {
+  \subsection*{Comments~by~Editor}
+}
+
+\NewDocumentCommand \Reviewer { m } {
+  \subsection*{Comments~by~Reviewer~#1}
+}
+\ExplSyntaxOff
+\AtBeginDocument{\maketitle\thispagestyle{empty}\noindent}
+
+% You can get probably get rid of these definitions:
+\newcommand\meta[1]{$\langle\hbox{#1}\rangle$}
+\newcommand\PaperTitle[1]{``\textit{#1}''}
+
+\title{Statement on the Revision of \meta{Paper ID} \\
+  Based on the Referees' Report}
+\author{Author1 \and Author2 \and Author3}
+\date{\today}
+
+%\color{blue}
+
+
+\begin{document}
+This statement concerns our revision of the \meta{Paper ID} paper,
+entitled \PaperTitle{\meta{Paper Title}}, based on the referees'
+report.
+
+
+\Editor{}
+\begin{response}{
+Actual scalability due to the required stored memory.
+}
+While the memory that the robot stores is important to the algorithm, scalability, with respect to the stored memory, is not. 
+Specifically, each robot needs to only store their own trajectory information (often this is stored as discrete samples in time). 
+The effective result of the past history is encoded into the Fourier spatial statistics $c_k$ that is then transmitted amongst each amongst robot that is locally connected.
+Therefore, as the number of robots increases, the amount of data each robot has to store about itself remains constant. 
+
+In order to clarify the scalability of the algorithm in the text, we added a few sentences that explain both the role of the memory and how this is only necessary for the individual robot to maintain.
+\end{response}
+
+\begin{response}{Comparison with other methods in the literature}
+Taking the guidelines of reviewer ... we have added more comparisons both in the literature review which motivates our method, but also as an example in ... . 
+
+We have also added other examples in the multimedia that are discussed in the text. 
+\end{response}
+
+\begin{response}{Robustness evaluation with respect to uncertainties and estimation
+errors}
+I can approach this a number of ways.
+The first is to numerically evaluate the robot in searching (which we have done here...). 
+The next method is to analytically show that the for a continuous sensor, the unvertainty is bounded by the noise from the sensor annd the measurement model. 
+\end{response}
+
+\Reviewer{\#2}
+\begin{response}{The addressed problem is very similar to area coverage problems that
+have been extensively studied in the literature. Specifically, see the
+following works for time-independent target distributions.
+Similarly, target localization is another well studied topic.
+How is the proposed method compared to the above methods? Why and when
+should someone use the proposed ergodic control framework and not one
+of the existing coverage and localization methods?
+}
+We recognize that there exists a plethora of work in the literature that addresses the problem that we propose to solve with our method. 
+We have added a comparison using the papers that the reviewer provided and more recent work that addresses similar work. 
+In addition, we clarify the scalability of our algorithm in ... and compare our algorithm further in the literature review. 
+\end{response}
+
+\begin{response}{What is ``q'' in (3)?}
+I have clarified this in the text as the weight on the ergodic metric. 
+\end{response}
+
+\begin{response}{What is $\lambda$? Is it a small time interval? How does it  appear in
+(3)? This is important to understand Proposition 1. The same also holds
+for $\tau_*$ that suddenly appears later in the text.}
+The values $\lambda$ and $\tau$ are now both defined in the text as the duration of control $u_\star$ starting at time $\tau$.
+Moreover, we clarify that $\tau_\star$ is the most significant time of application. 
+\end{response}
+
+\begin{response}{How is $\Delta t_{\mathcal{E}}$ selected? Is it time dependent? More
+details are required.}
+ The memory parameter $\Delta t_{\mathcal{E}}$ is simply an arbitrary choice that generates different behaviors for each robot.
+ For instance, a small $\Delta t_{\mathcal{E}}$ would encode a greedy search pattern where the robot spends more of its time in high density regions and skips low density regions. 
+ Large $\Delta t_{\mathcal{E}}$ encodes the opposite where the robot is now encouraged to consider a larger horizon and where else the robot needs to spend time to minimize the objective.
+\end{response}
+
+\begin{response}{Also, since the history of each robot needs to be stored, this means
+that the proposed algorithm scales poorly with the size of the network.
+This needs to be discussed and simulation studies that show how the
+proposed method performs as the number of robots increases need to be
+provided.}
+
+False, each robot need only store its own past trajectory as samples in time. 
+Moreover, because the only parameter that is shared amongst each agent is the $c_k$ time-averaged statistics of each agent. 
+Thus, memory itself is independent of the size of the network of robots and thus does not scale at all. 
+\end{response}
+
+\begin{response}{If the proof of Proposition 1 exists in [11] why is it included in
+the Appendix? Is there any difference?}
+ The proof is simply there so that the reader and reference in the same paper. 
+\end{response}
+
+
+\begin{response}{Also, equation (6) and the text before it are very vague. What does
+it capture? Why is it important?}
+ We have attempted to make that statement less vague by adding ... 
+\end{response}
+
+
+\begin{response}{Based on Fig 2, it is unclear why the decentralized method should be
+used instead of the centralized one. What are the advantages of the
+decentralized method compared to the centralized one?  This is very
+important to answer to clarify the contribution of the paper.}
+In many multi-agent systems, it is often desired that the individual robot in the system make informed actions that solve a global multi-agent task.
+Moreover, due to computational constraints, it is often desired that individual agents make these informed actions themselves based on local information.
+This then motivates Fig 2 as the centralized controller scales with the number of agents, we want to make sure that the decentralized controller approximately solves the centralized optimization problem without much loss in information from transmitting information.
+\end{response}
+
+
+\begin{response}{I would suggest Section V appear right after Section II but the
+authors do need to follow this suggestion. }
+ Thank you for the suggestion. We have decided not to move the section for reasons that include the 
+\end{response}
+
+
+
+
+
+
+
+
+\Reviewer{\#4}
+\begin{response}{First comment.}
+  Response to the first comment.
+\end{response}
+\end{document}
