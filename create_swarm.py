@@ -23,8 +23,10 @@ if __name__ == '__main__':
 
 
     num_agents = args.num_agents
+    agent_names = []
     for i in range(num_agents):
         node_name = 'agent{}'.format(i)
+        agent_names.append(node_name)
         args = '{}'.format(node_name)
         if i == 0:
             nodes.append(
@@ -36,5 +38,10 @@ if __name__ == '__main__':
             )
         processes.append(launch.launch(nodes[-1]))
 
-    rospy.init_node('test', anonymous=True)
+    # create a process for visualizing swarm
+    robot_rendering_node = roslaunch.core.Node(package=package, args=str(agent_names)[1:-1].replace(",",""),
+                    node_type='create_agent_rendering.py', name='robot_rendering', output="screen")
+    processes.append(launch.launch(robot_rendering_node))
+
+    rospy.init_node('launch_node', anonymous=True)
     rospy.spin()

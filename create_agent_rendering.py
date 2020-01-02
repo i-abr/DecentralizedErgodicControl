@@ -2,19 +2,19 @@
 
 import os
 import argparse
+import ast
 import rospy
 
-from quad_agent import Agent
+from quad_agent import QuadVisual
 
 
 parser = argparse.ArgumentParser()
-parser.add_argument('agent_name', type=str, help='agent name', default="thaddius")
+parser.add_argument('agent_names', type=str, nargs='+')
 args, unknown = parser.parse_known_args()
 
 if __name__ == '__main__':
-
-    agent = Agent(args.agent_name)
+    agent_rendering = QuadVisual(args.agent_names[:-2])
     try:
-        agent.run()
+        agent_rendering.run()
     except rospy.ROSInterruptException:
         pass
