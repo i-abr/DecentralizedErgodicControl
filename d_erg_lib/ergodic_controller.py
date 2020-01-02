@@ -35,6 +35,7 @@ class DErgControl(object):
         self._Rinv = np.linalg.inv(weights['R'])
 
         self._phik      = None
+        self._ck_mean = None
         self._ck_msg    = Ck()
         self._ck_msg.name = self._agent_name
         self._ck_dict   = {}
@@ -104,7 +105,6 @@ class DErgControl(object):
         # *** this is also in the utils file
         N = len(pred_traj)
         ck = np.sum([self._basis.fk(xt) for xt in pred_traj], axis=0) / N
-
         self._ck_msg.ck = ck.copy()
         self._ck_pub.publish(self._ck_msg)
 
@@ -115,6 +115,7 @@ class DErgControl(object):
                 cks.append(self._ck_dict[key])
             ck = np.mean(cks, axis=0)
             # print('sharing and make sure first ck is 0 ', ck[0])
+        self._ck_mean = ck
 
         fourier_diff = self._lamk * (ck - self._targ_dist.phik)
         fourier_diff = fourier_diff.reshape(-1,1)

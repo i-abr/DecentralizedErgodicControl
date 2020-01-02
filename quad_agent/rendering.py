@@ -68,7 +68,7 @@ class QuadVisual(object):
 
         for name, agent_marker in zip(self._agent_names, self._markers):
             rgb = np.random.uniform(0,1, size=(3,))
-            scale = 0.1
+            scale = 0.25
             agent_marker.header.frame_id = "world"
             agent_marker.header.stamp = rospy.Time(0)
             agent_marker.ns = name
@@ -81,7 +81,7 @@ class QuadVisual(object):
             agent_marker.color.r = rgb[0]
             agent_marker.color.g = rgb[1]
             agent_marker.color.b = rgb[2]
-            agent_marker.pose.position.z = np.random.uniform(1,4)
+            agent_marker.pose.position.z = np.random.uniform(1.6,4)
             agent_marker.type = Marker.MESH_RESOURCE
             agent_marker.mesh_resource = "package://decentralized_ergodic/mesh/quad_base.stl"
 

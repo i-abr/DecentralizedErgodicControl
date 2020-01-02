@@ -42,10 +42,8 @@ def convert_ck2dist(basis, ck, grid=None):
     statistics
     '''
     if grid is None:
-        print('--Assuming square grid')
         grid = np.meshgrid(*[np.linspace(0, 1.)
                                 for _ in range(2)])
         grid = np.c_[grid[0].ravel(), grid[1].ravel()]
-
     val = np.stack([np.dot(basis.fk(x), ck) for x in grid])
     return val

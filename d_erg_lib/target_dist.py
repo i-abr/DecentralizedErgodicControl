@@ -29,7 +29,6 @@ class TargetDist(object):
 
         self.has_update = False
         self.grid_vals = self.__call__(self.grid)
-
         self._phik = convert_phi2phik(self.basis, self.grid_vals, self.grid)
 
     @property

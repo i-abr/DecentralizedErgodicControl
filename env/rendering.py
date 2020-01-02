@@ -35,7 +35,7 @@ class Visual(object):
             marker.action = Marker.ADD
             marker.scale.x = obj.l * 10.
             marker.scale.y = obj.w * 10.
-            marker.scale.z = np.random.uniform(0.01, 0.2) * 10.
+            marker.scale.z = np.random.uniform(0.01, 0.15) * 10.
             marker.color.a = 1.0
             marker.color.r = rgb[0]
             marker.color.g = rgb[1]
