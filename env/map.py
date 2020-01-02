@@ -1,8 +1,11 @@
 import numpy as np
+import numpy.random as npr
 import rospy
 from visualization_msgs.msg import Marker, MarkerArray
 
 import tf
+
+from rendering import Visual
 
 def t_mat(p, theta):
     return np.array([
@@ -11,7 +14,7 @@ def t_mat(p, theta):
         [0., 0., 1.]
     ])
 
-class Objects(object):
+class Object(object):
 
     def __init__(self, p, theta, l, w):
 
@@ -19,6 +22,7 @@ class Objects(object):
         self.l = l
         self.w = w
         self.dim = np.array([l, w])
+        self._p = p
         self._t_mat = t_mat(p, theta)
         self._quat = tf.transformations.quaternion_from_euler(0,0,theta)
 
@@ -29,13 +33,26 @@ class Objects(object):
             return 1.0
         return False
 
-    def dx(self, x):
-
 
 class Map(Visual):
 
     def __init__(self, num_objs=10):
 
-        self.objects = [
-            Object(npr.uniform(0, 1, size=(2,)), npr.uniform(-np.pi, np.pi))
-        ]
+        rospy.init_node('env')
+        self.objects = []
+
+        for o in range(num_objs):
+            p = npr.uniform(0, 1, size=(2,))
+            theta = npr.uniform(-np.pi, np.pi)
+            l,w = npr.uniform(0.1,0.3, size=(2,))
+            self.objects.append(Object(p, theta, l, w))
+
+        Visual.__init__(self)
+
+        self.update_rendering()
+        self._rate = rospy.Rate(1)
+
+    def run(self):
+        while not rospy.is_shutdown():
+            self.update_rendering() # TODO: is this even necessary?
+            self._rate.sleep()

@@ -15,11 +15,11 @@ class QuadVisual(object):
         self._agent_names = agent_names
         self._scale      = scale
 
-        self._marker_msg = MarkerArray()
+        self._agent_markers = MarkerArray()
         self._markers = [
             Marker() for i in range(len(agent_names))
         ]
-        self._marker_msg.markers = self._markers
+        self._agent_markers.markers = self._markers
 
         # self._agent_marker   = Marker()
         # self._path_track     = Marker()
@@ -39,7 +39,7 @@ class QuadVisual(object):
 
 
     def update_rendering(self):
-        for agent_name, marker in zip(self._agent_names, self._marker_msg.markers):
+        for agent_name, marker in zip(self._agent_names, self._agent_markers.markers):
             try:
                 (trans, rot) = self.listener.lookupTransform(
                     "world", agent_name, rospy.Time(0)
@@ -61,7 +61,7 @@ class QuadVisual(object):
         #     Point(x[0]*10.,x[1]*10., self._agent_marker.pose.position.z) for x in path
         # ]
 
-        self._marker_pub.publish(self._marker_msg)
+        self._marker_pub.publish(self._agent_markers)
         # self._path_pub.publish(self._path_track)
 
     def __build_rendering(self):
