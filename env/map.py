@@ -1,4 +1,6 @@
 import numpy as np
+import autograd.numpy as anp
+from autograd import grad
 import numpy.random as npr
 import rospy
 from visualization_msgs.msg import Marker, MarkerArray
@@ -6,6 +8,11 @@ from visualization_msgs.msg import Marker, MarkerArray
 import tf
 
 from rendering import Visual
+
+def cost(_s, gBA, dim):
+    return anp.prod(0.5*(anp.tanh(-20 * (anp.abs(anp.dot(gBA,_s))-dim))+1))
+
+dcost = grad(cost)
 
 def t_mat(p, theta):
     return np.array([
