@@ -25,7 +25,8 @@ class DErgControl(object):
         self._lamk  = np.exp(-0.8*np.linalg.norm(self._basis.k, axis=1))
         self._barr  = Barrier(self._model.explr_space)
 
-        self._targ_dist = TargetDist(basis=self._basis)
+        self._agent_num = int(self._agent_name[5:])
+        self._targ_dist = TargetDist(basis=self._basis, agent_num=self._agent_num)
 
         self._u = [0.0*np.zeros(self._model.action_space.shape[0])
                         for _ in range(t_horizon)]
@@ -53,7 +54,7 @@ class DErgControl(object):
                 self._ck_dict[msg.name] = np.array(msg.ck)
             else:
                 self._ck_dict.update({msg.name : np.array(msg.ck)})
-
+    
     def reset(self):
         self._u = [0.0*np.zeros(self._model.action_space.shape[0])
                 for _ in range(self._t_horizon)]
@@ -108,13 +109,16 @@ class DErgControl(object):
         self._ck_msg.ck = ck.copy()
         self._ck_pub.publish(self._ck_msg)
 
-        if len(self._ck_dict.keys()) > 1:
-            self._ck_dict[self._agent_name] = ck
-            cks = []
-            for key in self._ck_dict.keys():
-                cks.append(self._ck_dict[key])
-            ck = np.mean(cks, axis=0)
-            # print('sharing and make sure first ck is 0 ', ck[0])
+        if not self._agent_num == 0:
+            if len(self._ck_dict.keys()) > 1:
+                self._ck_dict[self._agent_name] = ck
+                cks = []
+                for key in self._ck_dict.keys():
+                    if key!='agent0':
+                        cks.append(self._ck_dict[key])
+                ck = np.mean(cks, axis=0)
+                # print('sharing and make sure first ck is 0 ', ck[0])
+
         self._ck_mean = ck
 
         fourier_diff = self._lamk * (ck - self._targ_dist.phik)

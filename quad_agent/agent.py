@@ -67,7 +67,6 @@ class Agent(Model):
             self.agent_name,
             "world"
         )
-
         grid_vals = convert_ck2dist(self.ctrllr._basis, self.ctrllr._ck_mean)
         self._grid_msg.data[0].data = grid_vals[::-1]
         self._target_dist_pub.publish(self._grid_msg)
