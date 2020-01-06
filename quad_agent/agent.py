@@ -21,7 +21,11 @@ class Agent(Model):
         self._rate = rospy.Rate(10)
         Model.__init__(self)
         # Visual.__init__(self, agent_name)
-        self.ctrllr = DErgControl(agent_name, Model())
+        if agent_name == 'agent0':
+            print('setting batchsize agent0 higher')
+            self.ctrllr = DErgControl(agent_name, Model(), batch_size=100)
+        else:
+            self.ctrllr = DErgControl(agent_name, Model())#,num_basis=10)
         self.__br = tf.TransformBroadcaster()
 
         # TODO: consider moving this into the target dist class

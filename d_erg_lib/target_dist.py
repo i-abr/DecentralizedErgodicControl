@@ -60,8 +60,8 @@ class TargetDist(object):
     def callback(self, data):
         self.means.append(np.array([data.position.x, data.position.y]))
         self.vars.append(np.array([0.1,0.1])**2)
-        if self.agent_num == 0:
-                # Agent 0 Goes to the Location (DD Jammer)
+        if self.agent_num==0:
+                # Agent 1 Goes to the Location (DD Jammer)
             val = np.zeros(self.grid.shape[0])
             for m, v in zip(self.means, self.vars):
                 innerds = np.sum((self.grid-m)**2 / v, 1)
