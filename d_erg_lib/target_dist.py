@@ -4,6 +4,9 @@ import numpy as np
 import numpy.random as npr
 from utils import convert_phi2phik
 
+from geometry_msgs.msg import Pose
+from tanvas_comms.msg import input_array
+
 class TargetDist(object):
     '''
     This is going to be a test template for the code,
@@ -13,23 +16,29 @@ class TargetDist(object):
 
     def __init__(self, basis, num_nodes=2, num_pts=50):
 
-        # TODO: create a message class for this
-        # rospy.Subscriber('/target_distribution',  CLASSNAME, self.callback)
-
         self.basis = basis
         self.num_pts = num_pts
         grid = np.meshgrid(*[np.linspace(0, 1, num_pts) for _ in range(2)])
         self.grid = np.c_[grid[0].ravel(), grid[1].ravel()]
 
-        # self.means = [npr.uniform(0.2, 0.8, size=(2,))
-        #                     for _ in range(num_nodes)]
-        self.means = [np.array([0.7, 0.7]), np.array([0.3,0.3]), np.array([0.2, 0.8]), np.array([0.8,0.2])]
-        self.vars  = [np.array([0.1,0.1])**2, np.array([0.1,0.1])**2, np.array([0.1,0.1])**2, np.array([0.1,0.1])**2]
-
-
-        self.has_update = False
-        self.grid_vals = self.__call__(self.grid)
+        # Initialize with Uniform Exploration
+        self.grid_vals = self.init_uniform_grid(self.grid)
         self._phik = convert_phi2phik(self.basis, self.grid_vals, self.grid)
+
+        # Update for Environmental Stimuli (EEs & DDs)
+        self.dd_means = []
+        self.ee_means = []
+        self.dd_vars = []
+        self.ee_vars = []
+        self._ee = False
+        self._dd = False
+        
+        rospy.Subscriber('/ee_loc', Pose, self.ee_callback)
+        rospy.Subscriber('/dd_loc', Pose, self.dd_callback)
+
+        # Update for Tanvas Inputs
+        self._tanvas = False
+        rospy.Subscriber('/input', input_array, self.tanvas_callback)
 
     @property
     def phik(self):
@@ -48,17 +57,114 @@ class TargetDist(object):
             )
         return xy, self.grid_vals.reshape(self.num_pts, self.num_pts)
 
-
-    def __call__(self, x):
+    def init_uniform_grid(self, x):
         assert len(x.shape) > 1, 'Input needs to be a of size N x n'
         assert x.shape[1] == 2, 'Does not have right exploration dim'
 
-        val = np.zeros(x.shape[0])
-        for m, v in zip(self.means, self.vars):
-            innerds = np.sum((x-m)**2 / v, 1)
-            val += np.exp(-innerds/2.0)# / np.sqrt((2*np.pi)**2 * np.prod(v))
+        val = np.ones(x.shape[0])
+        val /= np.sum(val)
+        return val
+
+    def dd_callback(self,data):
+        print("updating dd location dist")
+        self.dd_means.append(np.array([data.position.x, data.position.y]))
+        self.dd_vars.append(np.array([0.1,0.1]))
+        self._dd = True
+        
+        ee_val = np.zeros(self.grid.shape[0])
+        if self._ee: 
+            for m, v in zip(self.ee_means, self.ee_vars):
+                innerds = np.sum((self.grid-m)**2 / v, 1)
+                ee_val += np.exp(-innerds/2.0)# / np.sqrt((2*np.pi)**2 * np.prod(v))
+                
+        dd_val = np.zeros(self.grid.shape[0])
+        for m, v in zip(self.dd_means, self.dd_vars):
+            innerds = np.sum((self.grid-m)**2 / v, 1)
+            dd_val += np.exp(-innerds/2.0)# / np.sqrt((2*np.pi)**2 * np.prod(v))
+        # Invert DD distribution
+        dd_val -= np.max(val)
+        dd_val = np.abs(val)#+1e-5
+
+        if self._tanvas: 
+            val = ee_val + dd_val + self.tanvas_dist
+        else:
+            val = ee_val + dd_val
+
         # normalizes the distribution
         val /= np.sum(val)
-        # val -= np.max(val)
-        # val = np.abs(val)
-        return val
+        self.grid_vals = val
+        self._phik = convert_phi2phik(self.basis,self.grid_vals,self.grid) 
+
+    def ee_callback(self,data):
+        print("updating ee location dist")
+        self.ee_means.append(np.array([data.position.x, data.position.y]))
+        self.ee_vars.append(np.array([0.1,0.1])**2)
+        self._ee = True
+        ee_val = np.zeros(self.grid.shape[0])
+        for m, v in zip(self.ee_means, self.ee_vars):
+            innerds = np.sum((self.grid-m)**2 / v, 1)
+            ee_val += np.exp(-innerds/2.0)# / np.sqrt((2*np.pi)**2 * np.prod(v))
+        
+        dd_val = np.zeros(self.grid.shape[0])
+        if self._dd: 
+            for m, v in zip(self.dd_means, self.dd_vars):
+                innerds = np.sum((self.grid-m)**2 / v, 1)
+                dd_val += np.exp(-innerds/2.0)# / np.sqrt((2*np.pi)**2 * np.prod(v))
+            # Invert DD distribution
+            dd_val -= np.max(val)
+            dd_val = np.abs(val)#+1e-5
+
+        if self._tanvas: 
+            val = ee_val + dd_val + self.tanvas_dist
+        else:
+            val = ee_val + dd_val
+        # normalizes the distribution
+        val /= np.sum(val)
+        self.grid_vals = val
+        self._phik = convert_phi2phik(self.basis,self.grid_vals,self.grid) 
+
+    def tanvas_callback(self, data):
+        if data.datalen != 0:
+            self._tanvas = True
+            print('received tanvas input')
+            tan_x = data.xinput
+            tan_y = data.yinput
+
+            grid_lenx = 30
+            grid_leny = 30
+            tan_arr = np.ones((grid_lenx, grid_leny))*.0001
+            for i in range(data.datalen):
+                tan_arr[tan_x[i], tan_y[i]] = 1.0
+            tan_arr = np.transpose(tan_arr)
+            tan_arr = tan_arr.ravel()
+            if np.max(tan_arr) > 0:
+                    temp = tan_arr
+            target_dist = temp            
+            target_dist /= np.sum(target_dist)
+            self.tanvas_dist = target_dist
+
+            
+            grid = np.meshgrid(*[np.linspace(0,1,grid_lenx), np.linspace(0,1,grid_leny)])
+            self.grid = np.c_[grid[0].ravel(), grid[1].ravel()]
+            # self._phik = convert_phi2phik(self.basis,target_dist, self.grid)
+
+            ee_val = np.zeros(self.grid.shape[0])
+            if self.ee: 
+                for m, v in zip(self.ee_means, self.ee_vars):
+                    innerds = np.sum((self.grid-m)**2 / v, 1)
+                    ee_val += np.exp(-innerds/2.0)# / np.sqrt((2*np.pi)**2 * np.prod(v))
+
+            dd_val = np.zeros(self.grid.shape[0])
+            if self.dd: 
+                for m, v in zip(self.dd_means, self.dd_vars):
+                    innerds = np.sum((self.grid-m)**2 / v, 1)
+                    dd_val += np.exp(-innerds/2.0)# / np.sqrt((2*np.pi)**2 * np.prod(v))
+                # Invert DD distribution
+                dd_val -= np.max(val)
+                dd_val = np.abs(val)#+1e-5
+
+            val = ee_val + dd_val + target_dist
+            # normalizes the distribution
+            val /= np.sum(val)
+            self.grid_vals = val
+            self._phik = convert_phi2phik(self.basis,self.grid_vals,self.grid) 

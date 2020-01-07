@@ -19,7 +19,10 @@ class QuadVisual(object):
         self._markers = [
             Marker() for i in range(len(agent_names))
         ]
-        self._agent_markers.markers = self._markers
+        self._path_markers = [
+            Marker() for i in range(len(agent_names))
+        ]
+        self._agent_markers.markers = self._markers + self._path_markers
 
         # self._agent_marker   = Marker()
         # self._path_track     = Marker()
