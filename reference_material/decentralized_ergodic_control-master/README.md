@@ -1,1 +1,0 @@
-# decentralized_ergodic_control
