@@ -1,6 +1,0 @@
-<launch>
-    <arg name="rvizconfig" default="$(find decentralized_ergodic)/rviz/config.rviz" />
-    <node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)" required="true" />
-    <node name="quad_simulator" pkg="decentralized_ergodic" type="main.py" output="screen"/>
-
-</launch>

@@ -1,1 +1,0 @@
-# decentralized ergodic control paper
