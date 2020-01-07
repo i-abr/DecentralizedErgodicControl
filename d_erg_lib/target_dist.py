@@ -29,7 +29,9 @@ class TargetDist(object):
         self.agent_num = agent_num
 
         self.means = []
-        self.vars = []
+        # self.vars = []
+        self.avoid_vars = []
+        self.converge_vars = []
         rospy.Subscriber('/ee_loc', Pose, self.callback)
 
     @property
@@ -58,12 +60,13 @@ class TargetDist(object):
         return val
     
     def callback(self, data):
+        print("updating target dist")
         self.means.append(np.array([data.position.x, data.position.y]))
-        self.vars.append(np.array([0.1,0.1])**2)
         if self.agent_num==0:
+            self.converge_vars.append(np.array([0.1,0.1])**2)
                 # Agent 1 Goes to the Location (DD Jammer)
             val = np.zeros(self.grid.shape[0])
-            for m, v in zip(self.means, self.vars):
+            for m, v in zip(self.means, self.converge_vars):
                 innerds = np.sum((self.grid-m)**2 / v, 1)
                 val += np.exp(-innerds/2.0)# / np.sqrt((2*np.pi)**2 * np.prod(v))
             # normalizes the distribution
@@ -71,14 +74,15 @@ class TargetDist(object):
             self.grid_vals = val
             self._phik = convert_phi2phik(self.basis,self.grid_vals,self.grid)
         else:
-            # Everyone else avoids it (DD Avoidance)
+            self.avoid_vars.append(np.array([0.1,0.1]))
+            #Everyone else avoids it (DD Avoidance)
             val = np.zeros(self.grid.shape[0])
-            for m, v in zip(self.means, self.vars):
+            for m, v in zip(self.means, self.avoid_vars):
                 innerds = np.sum((self.grid-m)**2 / v, 1)
                 val += np.exp(-innerds/2.0)# / np.sqrt((2*np.pi)**2 * np.prod(v))
             # Invert target distribution
             val -= np.max(val)
-            val = np.abs(val)+1e-5
+            val = np.abs(val)#+1e-5
 
             # normalizes the distribution
             val /= np.sum(val)

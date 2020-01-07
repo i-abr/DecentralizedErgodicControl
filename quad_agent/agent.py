@@ -5,7 +5,7 @@ import rospy
 import tf
 
 from d_erg_lib import DErgControl
-from d_erg_lib.utils import convert_ck2dist
+from d_erg_lib.utils import convert_ck2dist,convert_phik2phi
 from model import Model
 
 from grid_map_msgs.msg import GridMap
@@ -71,7 +71,7 @@ class Agent(Model):
             self.agent_name,
             "world"
         )
-        grid_vals = convert_ck2dist(self.ctrllr._basis, self.ctrllr._ck_mean)
+        grid_vals = self.ctrllr._targ_dist.grid_vals #convert_phik2phi(self.ctrllr._basis, self.ctrllr._targ_dist.phik)
         self._grid_msg.data[0].data = grid_vals[::-1]
         self._target_dist_pub.publish(self._grid_msg)
 

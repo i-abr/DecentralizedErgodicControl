@@ -6,7 +6,7 @@ from copy import deepcopy
 import rospy
 from std_msgs.msg import String, Float32MultiArray
 from target_dist import TargetDist
-
+from geometry_msgs.msg import Pose
 from decentralized_ergodic.msg import Ck
 
 class DErgControl(object):
@@ -47,6 +47,10 @@ class DErgControl(object):
         rospy.Subscriber('ck_link', Ck, self._ck_link_callback)
         self._ck_pub = rospy.Publisher('ck_link', Ck, queue_size=1)
 
+        # rospy.Subscriber('/ee_loc',Pose,self.tdist_callback)
+
+    # def tdist_callback(self,data):
+    #     self._replay_buffer.reset()
 
     def _ck_link_callback(self, msg):
         if msg.name != self._agent_name:
@@ -109,15 +113,15 @@ class DErgControl(object):
         self._ck_msg.ck = ck.copy()
         self._ck_pub.publish(self._ck_msg)
 
-        if not self._agent_num == 0:
-            if len(self._ck_dict.keys()) > 1:
-                self._ck_dict[self._agent_name] = ck
-                cks = []
-                for key in self._ck_dict.keys():
-                    if key!='agent0':
-                        cks.append(self._ck_dict[key])
-                ck = np.mean(cks, axis=0)
-                # print('sharing and make sure first ck is 0 ', ck[0])
+        # if not self._agent_num == 0:
+        if len(self._ck_dict.keys()) > 1:
+            self._ck_dict[self._agent_name] = ck
+            cks = []
+            for key in self._ck_dict.keys():
+                # if key!='agent0':
+                cks.append(self._ck_dict[key])
+            ck = np.mean(cks, axis=0)
+            # print('sharing and make sure first ck is 0 ', ck[0])
 
         self._ck_mean = ck
 

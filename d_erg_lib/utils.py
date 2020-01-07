@@ -21,7 +21,6 @@ def convert_phik2phi(basis, phik, phi_grid=None):
     Reconstructs phi from the Fourier terms
     '''
     if phi_grid is None:
-        print('--Assuming square grid')
         phi_grid = np.meshgrid(*[np.linspace(0, 1.)
                                 for _ in range(2)])
         phi_grid = np.c_[phi_grid[0].ravel(), phi_grid[1].ravel()]
