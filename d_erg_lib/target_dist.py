@@ -74,25 +74,29 @@ class TargetDist(object):
         self._dd = True
         
         ee_val = np.zeros(self.grid.shape[0])
+        ee_scale = np.ones(self.grid.shape[0])
         if self._ee: 
             for m, v in zip(self.ee_means, self.ee_vars):
                 innerds = np.sum((self.grid-m)**2 / v, 1)
                 ee_val += np.exp(-innerds/2.0)# / np.sqrt((2*np.pi)**2 * np.prod(v))
             ee_val /= np.sum(ee_val)
+            ee_scale = ee_val
 
         dd_val = np.zeros(self.grid.shape[0])
+        dd_scale = np.ones(self.grid.shape[0])
         for m, v in zip(self.dd_means, self.dd_vars):
             innerds = np.sum((self.grid-m)**2 / v, 1)
             dd_val += np.exp(-innerds/2.0)# / np.sqrt((2*np.pi)**2 * np.prod(v))
+        dd_scale = dd_val
         # Invert DD distribution
         dd_val -= np.max(dd_val)
         dd_val = np.abs(dd_val)#+1e-5
         dd_val /= np.sum(dd_val)
 
         if self._tanvas: 
-            val = ee_val + self.tanvas_dist + dd_val
+            val = (self.tanvas_dist + ee_val + dd_val) *  dd_scale 
         else:
-            val = ee_val + dd_val
+            val = (ee_val + dd_val)  *  dd_scale
 
         # normalizes the distribution
         val /= np.sum(val)
@@ -106,15 +110,17 @@ class TargetDist(object):
         print("updating ee location dist")
         self.ee_means.append(np.array([data.position.x, data.position.y]))
         self.ee_vars.append(np.array([0.1,0.1])**2)
-        self.ee_means.append(np.array([data.position.x, data.position.y]))
-        self.ee_vars.append(np.array([0.1,0.1])**2)
+
         self._ee = True
         ee_val = np.zeros(self.grid.shape[0])
+        ee_scale = np.ones(self.grid.shape[0])
         for m, v in zip(self.ee_means, self.ee_vars):
             innerds = np.sum((self.grid-m)**2 / v, 1)
             ee_val += np.exp(-innerds/2.0)# / np.sqrt((2*np.pi)**2 * np.prod(v))
         ee_val /= np.sum(ee_val)
+        ee_scale = ee_val
 
+        dd_scale = np.ones(self.grid.shape[0])
         dd_val = np.zeros(self.grid.shape[0])
         if self._dd: 
             for m, v in zip(self.dd_means, self.dd_vars):
@@ -125,10 +131,12 @@ class TargetDist(object):
             dd_val = np.abs(dd_val)#+1e-5
             dd_val /= np.sum(dd_val)
 
+            dd_scale = dd_val
+
         if self._tanvas: 
-            val = ee_val + dd_val + self.tanvas_dist
+            val = (self.tanvas_dist + ee_val + dd_val) * dd_scale
         else:
-            val = ee_val + dd_val
+            val = (ee_val + dd_val) * dd_scale
         # normalizes the distribution
         val /= np.sum(val)
         self.grid_vals = val
@@ -146,7 +154,7 @@ class TargetDist(object):
 
             grid_lenx = 50
             grid_leny = 50
-            tan_arr = np.ones((grid_lenx, grid_leny))*.0001
+            tan_arr = np.ones((grid_lenx, grid_leny))*.05#*.0001
             for i in range(data.datalen):
                 tan_arr[tan_x[i], tan_y[i]] = 1.0
             tan_arr = np.transpose(tan_arr)
@@ -163,13 +171,16 @@ class TargetDist(object):
             # self._phik = convert_phi2phik(self.basis,target_dist, self.grid)
 
             ee_val = np.zeros(self.grid.shape[0])
+            ee_scale = np.ones(self.grid.shape[0])
             if self._ee: 
                 for m, v in zip(self.ee_means, self.ee_vars):
                     innerds = np.sum((self.grid-m)**2 / v, 1)
                     ee_val += np.exp(-innerds/2.0)# / np.sqrt((2*np.pi)**2 * np.prod(v))
                 ee_val /= np.sum(ee_val)
+                ee_scale = ee_val
 
             dd_val = np.zeros(self.grid.shape[0])
+            dd_scale = np.ones(self.grid.shape[0])
             if self._dd: 
                 for m, v in zip(self.dd_means, self.dd_vars):
                     innerds = np.sum((self.grid-m)**2 / v, 1)
@@ -177,9 +188,10 @@ class TargetDist(object):
                 # Invert DD distribution
                 dd_val -= np.max(dd_val)
                 dd_val = np.abs(dd_val)#+1e-5
-                dd_val /= np.sum(val)
+                dd_val /= np.sum(dd_val)
 
-            val = ee_val + dd_val + target_dist
+                dd_scale = dd_val
+            val =  (target_dist + ee_val +  dd_val) * dd_scale
             # normalizes the distribution
             val /= np.sum(val)
             self.grid_vals = val
