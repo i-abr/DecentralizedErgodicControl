@@ -63,6 +63,10 @@ class DErgControl(object):
     def __call__(self, state):
         assert self._targ_dist.phik is not None, 'Forgot to set phik'
 
+        if self._targ_dist.has_update==True: 
+            self._replay_buffer.reset()
+            self._targ_dist.has_update = False
+            
         self._u[:-1] = self._u[1:]
         self._u[-1]  = np.zeros(self._model.action_space.shape[0])
 

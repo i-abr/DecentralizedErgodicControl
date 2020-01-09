@@ -43,9 +43,9 @@ if __name__ == '__main__':
                     node_type='create_agent_rendering.py', name='robot_rendering', output="screen")
     processes.append(launch.launch(robot_rendering_node))
 
-    env_rendering_node = roslaunch.core.Node(package=package, node_type='create_env_rendering.py',
-                        name='env_rendering',output="screen", args=str(6))
-    processes.append(launch.launch(env_rendering_node))
+    # env_rendering_node = roslaunch.core.Node(package=package, node_type='create_env_rendering.py',
+    #                     name='env_rendering',output="screen", args=str(6))
+    # processes.append(launch.launch(env_rendering_node))
 
     rospy.init_node('launch_node', anonymous=True)
     rospy.spin()

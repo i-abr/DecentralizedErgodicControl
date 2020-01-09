@@ -10,7 +10,9 @@ from model import Model
 
 from grid_map_msgs.msg import GridMap
 from std_msgs.msg import Float32MultiArray, MultiArrayLayout, MultiArrayDimension
+from geometry_msgs.msg import Pose
 import tf
+import numpy as np
 
 class Agent(Model):
 
@@ -21,7 +23,7 @@ class Agent(Model):
         self._rate = rospy.Rate(10)
         Model.__init__(self)
         # Visual.__init__(self, agent_name)
-        self.ctrllr = DErgControl(agent_name, Model())
+        self.ctrllr = DErgControl(agent_name, Model(),num_basis=10)
         self.__br = tf.TransformBroadcaster()
 
         # TODO: consider moving this into the target dist class
@@ -29,7 +31,7 @@ class Agent(Model):
 
         gridmap = GridMap()
         arr = Float32MultiArray()
-
+        print(np.shape(self.ctrllr._targ_dist.grid_vals[::-1]))
         arr.data = self.ctrllr._targ_dist.grid_vals[::-1]
         arr.layout.dim.append(MultiArrayDimension())
         arr.layout.dim.append(MultiArrayDimension())
@@ -55,11 +57,32 @@ class Agent(Model):
 
         self._grid_msg = gridmap
 
+        # Simulate publisher for encountering dd or ee
+        self.dd_pub = rospy.Publisher('/dd_loc', Pose, queue_size=1)
+        self.ee_pub = rospy.Publisher('/ee_loc', Pose, queue_size=1)
+        self.pose_msg = Pose()
+        self.pose_msg.position.z = 0.
+        self.pose_msg.orientation.x = 0.0
+        self.pose_msg.orientation.x = 0.0
+        self.pose_msg.orientation.x = 0.0
+        self.pose_msg.orientation.w = 1.0
+        
+
     def step(self):
         ctrl = self.ctrllr(self.state)
         pred_path = self.ctrllr.pred_path
         super(Agent, self).step(ctrl)
         # self.update_rendering(pred_path)
+
+        # if (np.abs(self.state[0]-self.dd_loc[0])<0.01) and (np.abs(self.state[1]-self.dd_loc[1])<0.01):
+        #     self.pose_msg.position.x = self.dd_loc[0]
+        #     self.pose_msg.position.y = self.dd_loc[1]
+        #     self.dd_pub.publish(self.pose_msg)
+
+        # if (np.abs(self.state[0]-self.ee_loc[0])<0.01) and (np.abs(self.state[1]-self.ee_loc[1])<0.01):
+        #     self.pose_msg.position.x = self.ee_loc[0]
+        #     self.pose_msg.position.y = self.ee_loc[1]
+            # self.ee_pub.publish(self.pose_msg)
         self.__br.sendTransform(
             (self.state[0]*10, self.state[1]*10, 0.),
             (0.,0.,0.,1.),

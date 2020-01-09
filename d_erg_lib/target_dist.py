@@ -25,6 +25,7 @@ class TargetDist(object):
         self.grid_vals = self.init_uniform_grid(self.grid)
         self._phik = convert_phi2phik(self.basis, self.grid_vals, self.grid)
 
+        self.has_update = False
         # Update for Environmental Stimuli (EEs & DDs)
         self.dd_means = []
         self.ee_means = []
@@ -40,6 +41,7 @@ class TargetDist(object):
         self._tanvas = False
         rospy.Subscriber('/input', input_array, self.tanvas_callback)
 
+        
     @property
     def phik(self):
         return self._phik
@@ -76,27 +78,34 @@ class TargetDist(object):
             for m, v in zip(self.ee_means, self.ee_vars):
                 innerds = np.sum((self.grid-m)**2 / v, 1)
                 ee_val += np.exp(-innerds/2.0)# / np.sqrt((2*np.pi)**2 * np.prod(v))
-                
+            ee_val /= np.sum(ee_val)
+
         dd_val = np.zeros(self.grid.shape[0])
         for m, v in zip(self.dd_means, self.dd_vars):
             innerds = np.sum((self.grid-m)**2 / v, 1)
             dd_val += np.exp(-innerds/2.0)# / np.sqrt((2*np.pi)**2 * np.prod(v))
         # Invert DD distribution
-        dd_val -= np.max(val)
-        dd_val = np.abs(val)#+1e-5
+        dd_val -= np.max(dd_val)
+        dd_val = np.abs(dd_val)#+1e-5
+        dd_val /= np.sum(dd_val)
 
         if self._tanvas: 
-            val = ee_val + dd_val + self.tanvas_dist
+            val = ee_val + self.tanvas_dist + dd_val
         else:
             val = ee_val + dd_val
 
         # normalizes the distribution
         val /= np.sum(val)
         self.grid_vals = val
-        self._phik = convert_phi2phik(self.basis,self.grid_vals,self.grid) 
+        self._phik = convert_phi2phik(self.basis,self.grid_vals,self.grid)
+
+        #self.has_update = True
+
 
     def ee_callback(self,data):
         print("updating ee location dist")
+        self.ee_means.append(np.array([data.position.x, data.position.y]))
+        self.ee_vars.append(np.array([0.1,0.1])**2)
         self.ee_means.append(np.array([data.position.x, data.position.y]))
         self.ee_vars.append(np.array([0.1,0.1])**2)
         self._ee = True
@@ -104,15 +113,17 @@ class TargetDist(object):
         for m, v in zip(self.ee_means, self.ee_vars):
             innerds = np.sum((self.grid-m)**2 / v, 1)
             ee_val += np.exp(-innerds/2.0)# / np.sqrt((2*np.pi)**2 * np.prod(v))
-        
+        ee_val /= np.sum(ee_val)
+
         dd_val = np.zeros(self.grid.shape[0])
         if self._dd: 
             for m, v in zip(self.dd_means, self.dd_vars):
                 innerds = np.sum((self.grid-m)**2 / v, 1)
                 dd_val += np.exp(-innerds/2.0)# / np.sqrt((2*np.pi)**2 * np.prod(v))
             # Invert DD distribution
-            dd_val -= np.max(val)
-            dd_val = np.abs(val)#+1e-5
+            dd_val -= np.max(dd_val)
+            dd_val = np.abs(dd_val)#+1e-5
+            dd_val /= np.sum(dd_val)
 
         if self._tanvas: 
             val = ee_val + dd_val + self.tanvas_dist
@@ -121,7 +132,10 @@ class TargetDist(object):
         # normalizes the distribution
         val /= np.sum(val)
         self.grid_vals = val
-        self._phik = convert_phi2phik(self.basis,self.grid_vals,self.grid) 
+        self._phik = convert_phi2phik(self.basis,self.grid_vals,self.grid)
+
+        #self.has_update = True
+
 
     def tanvas_callback(self, data):
         if data.datalen != 0:
@@ -130,8 +144,8 @@ class TargetDist(object):
             tan_x = data.xinput
             tan_y = data.yinput
 
-            grid_lenx = 30
-            grid_leny = 30
+            grid_lenx = 50
+            grid_leny = 50
             tan_arr = np.ones((grid_lenx, grid_leny))*.0001
             for i in range(data.datalen):
                 tan_arr[tan_x[i], tan_y[i]] = 1.0
@@ -149,22 +163,27 @@ class TargetDist(object):
             # self._phik = convert_phi2phik(self.basis,target_dist, self.grid)
 
             ee_val = np.zeros(self.grid.shape[0])
-            if self.ee: 
+            if self._ee: 
                 for m, v in zip(self.ee_means, self.ee_vars):
                     innerds = np.sum((self.grid-m)**2 / v, 1)
                     ee_val += np.exp(-innerds/2.0)# / np.sqrt((2*np.pi)**2 * np.prod(v))
+                ee_val /= np.sum(ee_val)
 
             dd_val = np.zeros(self.grid.shape[0])
-            if self.dd: 
+            if self._dd: 
                 for m, v in zip(self.dd_means, self.dd_vars):
                     innerds = np.sum((self.grid-m)**2 / v, 1)
                     dd_val += np.exp(-innerds/2.0)# / np.sqrt((2*np.pi)**2 * np.prod(v))
                 # Invert DD distribution
-                dd_val -= np.max(val)
-                dd_val = np.abs(val)#+1e-5
+                dd_val -= np.max(dd_val)
+                dd_val = np.abs(dd_val)#+1e-5
+                dd_val /= np.sum(val)
 
             val = ee_val + dd_val + target_dist
             # normalizes the distribution
             val /= np.sum(val)
             self.grid_vals = val
-            self._phik = convert_phi2phik(self.basis,self.grid_vals,self.grid) 
+            self._phik = convert_phi2phik(self.basis,self.grid_vals,self.grid)
+
+            self.has_update = True
+
