@@ -25,7 +25,7 @@ ee_data = []
 ee_time = []
 
 # fname = 'data/het_sim_6agents.bag'
-fname = 'data/het_sim_6agents_2.bag'
+fname = '/home/anon/darpa_sim_data/hetsim_data/het_sim_6agents_3.bag'
 bag = rosbag.Bag(fname)
 
 ee = False
@@ -140,56 +140,56 @@ def plot_combined_ck(xt_list,fig=None):
         plt.imshow(ck_grid, origin="lower", extent=(0,1,0,1))
 
 
-fig, ((ax1,ax2,ax3,ax4),(ax5,ax6,ax7,ax8)) = plt.subplots(2,4, sharex=True,sharey=True)
+fig, ((ax1,ax2,ax3),(ax4,ax5,ax6)) = plt.subplots(2,3, sharex=True,sharey=True)
 
-agent_name = 'Agent 1'
-traj = np.array(swarm_pos[0])
-ax1.plot(traj[:,0],traj[:,1],label=agent_name)
+# agent_name = 'Agent 1'
+# traj = np.array(swarm_pos[0])
+# ax1.plot(traj[:,0],traj[:,1],label=agent_name)
+# ax1.axis('square')
+# ax1.set_xlim(0,1)
+# ax1.set_ylim(0,1)
+# ax1.set_title('Uniform: Agent 1')
+# ax1.set_ylabel('y')
+
+for i in range(0,len(swarm_pos)):
+    agent_name = 'Agent ' + str(i+1)
+    traj = np.array(swarm_pos[i])
+    ax1.plot(traj[:,0],traj[:,1],label=agent_name)
 ax1.axis('square')
 ax1.set_xlim(0,1)
 ax1.set_ylim(0,1)
-ax1.set_title('Uniform: Agent 1')
-ax1.set_ylabel('y')
-
-for i in range(1,len(swarm_pos)):
-    agent_name = 'Agent ' + str(i+1)
-    traj = np.array(swarm_pos[i])
-    ax2.plot(traj[:,0],traj[:,1],label=agent_name)
-ax2.axis('square')
-ax2.set_xlim(0,1)
-ax2.set_ylim(0,1)
-ax2.set_title('Uniform: Agents 2-6') 
+# ax1.set_title('Uniform Exploration') 
 
 agent_name = 'Agent 1'
 traj = np.array(swarm_pos_postee[0])
-ax3.plot(traj[:,0],traj[:,1],label=agent_name)
-ax3.axis('square')
-ax3.set_xlim(0,1)
-ax3.set_ylim(0,1)
-ax3.set_title('DD: Agent 1')
+ax2.plot(traj[:,0],traj[:,1],label=agent_name)
+ax2.axis('square')
+ax2.set_xlim(0,1)
+ax2.set_ylim(0,1)
+# ax2.set_title('DD: Agent 1')
 
 for i in range(1,len(swarm_pos_postee)):
     agent_name = 'Agent ' + str(i+1)
     traj = np.array(swarm_pos_postee[i])
-    ax4.plot(traj[:,0],traj[:,1],label=agent_name)
-ax4.axis('square')
-ax4.set_xlim(0,1)
-ax4.set_ylim(0,1)
+    ax3.plot(traj[:,0],traj[:,1],label=agent_name)
+ax3.axis('square')
+ax3.set_xlim(0,1)
+ax3.set_ylim(0,1)
 
-ax4.set_title('DD: Agent 2-6')
+# ax3.set_title('DD: Agent 2-6')
 
-plot_ck(np.array(swarm_pos[0]),fig=ax5)
-ax5.set_ylabel('y')
+# plot_ck(np.array(swarm_pos[0]),fig=ax5)
+# ax5.set_ylabel('y')
+# ax5.set_xlabel('x')
+# ax5.set_title('Uniform Ck: 1')
+
+plot_combined_ck(swarm_pos,fig=ax4)
+ax4.set_xlabel('x')
+# ax4.set_title('Uniform Ck: 2-6')
+plot_ck(np.array(swarm_pos_postee[0]),fig=ax5)
 ax5.set_xlabel('x')
-ax5.set_title('Uniform Ck: 1')
-
-plot_combined_ck(swarm_pos[1:],fig=ax6)
+# ax5.set_title('DD Ck: 1')
+plot_combined_ck(swarm_pos_postee[1:],fig=ax6)
 ax6.set_xlabel('x')
-ax5.set_title('Uniform Ck: 2-6')
-plot_ck(np.array(swarm_pos_postee[0]),fig=ax7)
-ax7.set_xlabel('x')
-ax7.set_title('DD Ck: 1')
-plot_combined_ck(swarm_pos_postee[1:],fig=ax8)
-ax8.set_xlabel('x')
-ax8.set_title('DD Ck: 2-6')
+# ax6.set_title('DD Ck: 2-6')
 plt.show()

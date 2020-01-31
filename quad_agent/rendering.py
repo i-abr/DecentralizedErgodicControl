@@ -7,7 +7,10 @@ from tf import transformations as trans
 
 import seaborn as sns
 
-palette = sns.color_palette("bright")
+sns_palette = sns.color_palette("bright")
+palette = [sns_palette[2],sns_palette[3],sns_palette[6],sns_palette[7],sns_palette[8],sns_palette[9]]
+
+
 class QuadVisual(object):
 
     def __init__(self, agent_names, scale=0.1):
@@ -84,7 +87,7 @@ class QuadVisual(object):
         i=0
         for name, agent_marker, path_marker in zip(self._agent_names, self._markers,self._path_markers):
             rgb = np.random.uniform(0,1, size=(3,))
-            quad_scale = 0.5
+            quad_scale = 1.0#0.5
             agent_marker.header.frame_id = "world"
             agent_marker.header.stamp = rospy.Time(0)
             agent_marker.ns = name
