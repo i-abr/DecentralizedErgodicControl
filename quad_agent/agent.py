@@ -6,7 +6,7 @@ import tf
 
 from d_erg_lib import DErgControl
 from d_erg_lib.utils import convert_ck2dist
-from model import Model
+from .model import Model
 
 from grid_map_msgs.msg import GridMap
 from std_msgs.msg import Float32MultiArray, MultiArrayLayout, MultiArrayDimension

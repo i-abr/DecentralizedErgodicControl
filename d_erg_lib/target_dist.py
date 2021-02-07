@@ -2,7 +2,7 @@ import rospy
 
 import numpy as np
 import numpy.random as npr
-from utils import convert_phi2phik
+from .utils import convert_phi2phik
 
 class TargetDist(object):
     '''

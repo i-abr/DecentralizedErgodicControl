@@ -1,1 +1,1 @@
-from ergodic_controller import DErgControl
+from .ergodic_controller import DErgControl

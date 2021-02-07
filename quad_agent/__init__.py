@@ -1,2 +1,2 @@
-from agent import Agent
-from rendering import QuadVisual
+from .agent import Agent
+from .rendering import QuadVisual

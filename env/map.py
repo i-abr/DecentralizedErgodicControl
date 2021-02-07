@@ -7,7 +7,7 @@ from visualization_msgs.msg import Marker, MarkerArray
 
 import tf
 
-from rendering import Visual
+from .rendering import Visual
 
 # def cost(_s, gBA, dim):
 #     return anp.prod(0.5*(anp.tanh(-20 * (anp.abs(anp.dot(gBA,_s))-dim))+1))

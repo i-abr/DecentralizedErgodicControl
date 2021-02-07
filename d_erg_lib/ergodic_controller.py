@@ -1,11 +1,11 @@
 import numpy as np
-from basis import Basis
-from barrier import Barrier
-from replay_buffer import ReplayBuffer
+from .basis import Basis
+from .barrier import Barrier
+from .replay_buffer import ReplayBuffer
 from copy import deepcopy
 import rospy
 from std_msgs.msg import String, Float32MultiArray
-from target_dist import TargetDist
+from .target_dist import TargetDist
 
 from decentralized_ergodic.msg import Ck
 
@@ -49,7 +49,7 @@ class DErgControl(object):
 
     def _ck_link_callback(self, msg):
         if msg.name != self._agent_name:
-            if self._ck_dict.has_key(msg.name):
+            if msg.name in self._ck_dict:
                 self._ck_dict[msg.name] = np.array(msg.ck)
             else:
                 self._ck_dict.update({msg.name : np.array(msg.ck)})
